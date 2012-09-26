@@ -1,0 +1,218 @@
+.styleIsoTabMenu {
+	position: absolute;
+  top: 5px; 
+  right: 9px;
+  width: 125px; 
+  height: 20px;
+  z-index: 106; 
+  background: #cccccc;
+	background-image: url("../img/arrowDown.png") no-repeat scroll right top;
+	background-size: 10px;
+  border: thin; 
+  border-top-style: solid;
+  border-left-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  text-align: center;
+  font-style: normal;
+}
+
+.styleHomeTabMenu {
+	position: absolute;
+  top: 5px; 
+  right: 255px;
+  width: 125px; 
+  height: 20px;
+  z-index: 106; 
+  background: #cccccc;
+	background-size: 10px;
+  border: thin; 
+  border-top-style: solid;
+  border-left-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  text-align: center;
+  font-style: normal;
+}
+
+.styleHelpTabMenu {
+	position: absolute;
+  top: 5px; 
+  right: 135px;
+  width: 130px; 
+  height: 20px;
+  z-index: 106; 
+  /*display: none;*/
+	background: #cccccc;
+  border: thin; 
+  border-top-style: solid;
+  border-left-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  text-align: center;	
+}
+
+.styleIsoTabPane {
+	position: absolute;
+	top: 20px;
+	left: -245px;
+	width: 350px;
+	z-index: 999;
+	/*display: none;*/
+	background: #cccccc;
+  border: thin; 
+  border-top-style: solid;
+  border-left-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  font-size:smaller;
+  font-family: sans-serif;
+}
+
+
+
+.styleHelpTabPane {
+		position: absolute;
+	top: 20px;
+	left: -391px;
+	/*height: 550px;*/
+	width: 520px;
+	z-index: 999;
+	background: #cccccc;
+  border: thin; 
+  border-top-style: solid;
+  border-left-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  text-align: left;
+  font-size:smaller;
+  font-family: sans-serif;
+}
+
+.styleResultTabPane{
+	position: absolute;
+	bottom: 50px;
+	left: 10px;
+	/*
+	top: 280px;
+	right: 9px;
+	*/
+	height: 100px;
+	width: 250px;
+	z-index: 999;
+	background: #cccccc;
+  border: thin; 
+  border-top-style: solid;
+  border-left-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  text-align: left;
+  font-size: large;
+}
+
+
+.styleArrows {
+	height: 10px;
+	width: 	10px;
+}
+
+.nwIcon {
+	height: 15px;
+	width: 	15px;
+}
+
+.styleTapPaneLink {
+	text-decoration: none;
+}
+
+.inputText{
+	margin-left:15px;
+	font-family: Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+	font-weight: bold; 
+}
+
+input.btn { 
+	  color:white; 
+	  font: bold 84% 'trebuchet ms',helvetica,sans-serif; 
+	  background-color:#7bc142; 
+	  border: 1px solid; 	  
+} 
+
+.menuText{
+	margin-left:15px;
+	margin-right:20px;
+	font-family: Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+}
+
+.menuItem{
+	color:black;
+	font-weight: bold; 
+	font-family: Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+}
+
+.styleProgressBar {
+	z-index:200;
+	visibility:collapse;
+	position:absolute;
+	width: 200px;
+}
+
+.styleParameters {
+	border:thin;
+	border-color:black;
+	border-style
+}
+
+fieldset
+{
+	border: 1px solid #000000;
+	border:thin;
+	border-color:black;
+	border-style:solid;
+	font-weight: bold;
+	font-size: 10pt;
+}
+
+label {
+	font-family: Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+	font-weight: lighter;
+}
+
+.styleLabel {
+	font-family: Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+	font-weight: lighter;
+}
+
+/** 
+Overriding Openlayers properties
+**/
+
+/* required to position the layer switcher in a bottom right position*/
+.olControlLayerSwitcher {
+	top: 75%;
+}
+
+.olLayerGoogleV3 {
+	visibility: hidden;
+}
+
+/*
+.ui-progressbar-value { background-image: url(../lib/jquery/css/images/pbar-ani.gif); }
+*/
+
+/* the time picker */
+/* css for timepicker */
+.ui-timepicker-div .ui-widget-header{ margin-bottom: 8px; }
+.ui-timepicker-div dl{ text-align: left; }
+.ui-timepicker-div dl dt{ height: 25px; }
+.ui-timepicker-div dl dd{ margin: -25px 0 10px 65px; }
+.ui-timepicker-div .ui_tpicker_hour div { padding-right: 2px; }
+.ui-timepicker-div .ui_tpicker_minute div { padding-right: 6px; }
+.ui-timepicker-div .ui_tpicker_second div { padding-right: 6px; }
+.ui-timepicker-div td { font-size: 90%; }
+

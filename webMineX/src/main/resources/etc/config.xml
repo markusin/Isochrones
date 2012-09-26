@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<!-- Global database settings -->
+	<entry key="db.vendor">oracle</entry>
+	<entry key="db.maxConnections">50</entry>
+	<entry key="db.batchSize">250</entry>
+	<entry key="db.pooling">false</entry>
+	<entry key="tbl.session">web_sessions</entry>
+	<!-- Oracle database -->
+	<entry key="oracle.jdbc.servername">maps.inf.unibz.it</entry>
+	<entry key="oracle.jdbc.database">maps</entry>
+	<entry key="oracle.jdbc.username">mainnerebner</entry>
+	<entry key="oracle.jdbc.password">mainnerebner1234</entry>
+	<entry key="oracle.jdbc.port">1521</entry>
+	<!-- Postgres database -->
+	<entry key="org.postgresql.servername">localhost</entry>
+	<entry key="org.postgresql.database">isochrones</entry>
+	<entry key="org.postgresql.schema">public</entry>
+	<entry key="org.postgresql.username">postgres</entry>
+	<entry key="org.postgresql.password">AifaXub2</entry>
+	<entry key="org.postgresql.port">5432</entry>
+	<!-- Rendering engine properties -->
+	<entry key="rendering.server.url">http://10.10.161.33:8180/geoserver</entry>
+	<entry key="rendering.server.rest.url">http://10.10.161.33:8180/geoserver</entry>
+	<entry key="rendering.server.rest.username">mainnerebner</entry>
+	<entry key="rendering.server.rest.password">mainnerebner1234</entry>
+	<entry key="rendering.server.rest.workspace">iso</entry> 
+	<entry key="rendering.server.rest.datastore">ora_maps</entry>
+	<!-- Computation parameters -->
+	<entry key="par.defaultWalkingSpeed">1.5</entry>
+	<!-- Autorun parameters -->
+	<entry key="par.mode">1</entry>
+	<entry key="par.walkingSpeed">1.5</entry>
+	<entry key="par.distance_tolerance">100</entry>
+	<!-- Test parameters -->
+	<entry key="par.timeInterval">10</entry>
+	<entry key="par.range">7</entry>
+	<entry key="par.runsPerTime">20</entry>
+	<!-- Configuration parameters -->
+	<entry key="cfg.defaultConfigFile">config_bz.xml</entry>
+	<entry key="cfg.clientSRID">3857</entry>
+	<entry key="cfg.datasets">bz,st,sf,wdc,it</entry>
+	<entry key="cfg.flushLimit">100</entry>
+	<entry key="client.progressbar.size">100</entry>
+	<entry key="cfg.cleanupInterval">2</entry> <!-- Cleanup interval in hours -->
+</properties>

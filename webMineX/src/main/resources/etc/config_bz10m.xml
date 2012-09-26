@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<properties>
+	<!-- Oracle database -->
+	<entry key="db.address">jdbc:oracle:thin:@bz10m.inf.unibz.it:1521:bz10m</entry>
+	<entry key="db.username">ISO_PROD</entry>
+	<entry key="db.password">ISO_PROD</entry>
+	<!-- SQL parameters -->
+	<entry key="sql.numberOfBatchInserts">1000</entry>
+	<!-- Computation parameters -->
+	<entry key="par.defaultWalkingSpeed">1.5</entry>
+	<!-- Autorun parameters -->
+	<entry key="par.mode">1</entry>
+	<entry key="par.walkingSpeed">1.5</entry>
+	<!-- Test parameters -->
+	<entry key="par.timeInterval">10</entry>
+	<entry key="par.range">7</entry>
+	<entry key="par.runsPerTime">20</entry>
+	<!-- Test parameters -->
+	<entry key="cfg.defaultConfigFile">config_bz.xml</entry>
+	<entry key="cfg.clientSRID">3785</entry>
+	<entry key="cfg.datasets">bz,st,sf,wdc</entry>
+	<entry key="cfg.flushLimit">50</entry>
+	<entry key="client.wms.link.namespace">isoprod</entry>
+	<entry key="client.mapserverUrl">http://bz10m.inf.unibz.it:8180/geoserver</entry>
+</properties>

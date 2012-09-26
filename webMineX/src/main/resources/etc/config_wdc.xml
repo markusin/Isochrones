@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<!-- Database tables -->
+	<entry key="tbl.links">dc_edges</entry>
+	<entry key="tbl.nodes">dc_nodes</entry>
+	<entry key="tbl.trips">dc_trips</entry>
+	<entry key="tbl.times">dc_schedules</entry>
+	<entry key="tbl.dateCodes">dc_calendar</entry>
+	<entry key="tbl.routes">dc_routes</entry>
+	<!-- Database result tables -->
+	<entry key="tbl.isoLinks">dc_iso_edges</entry>
+	<entry key="idx.isoLinks">sidx_dc_iso_edges</entry>
+	<entry key="tbl.isoNodes">dc_iso_nodes</entry>
+	<entry key="idx.isoNodes">sidx_dc_iso_nodes</entry>
+	<entry key="tbl.isoNodesAnnotations">dc_iso_nann</entry>
+	<entry key="tbl.isoAreaBuffer">dc_iso_area</entry>
+	<entry key="idx.isoAreaBuffer">sidx_dc_iso_area</entry>
+	<!-- Spatial settings -->
+	<entry key="sql.spatial.dim1.name">X</entry>
+	<entry key="sql.spatial.dim1.lower">-8584959.12997726</entry>
+	<entry key="sql.spatial.dim1.upper">-8562695.2318186</entry>
+	<entry key="sql.spatial.dim1.tolerance">0.5</entry>
+	<entry key="sql.spatial.dim2.name">Y</entry>
+	<entry key="sql.spatial.dim2.lower">4704497.14952737</entry>
+	<entry key="sql.spatial.dim2.upper">4717375.24054852</entry>
+	<entry key="sql.spatial.dim2.tolerance">0.5</entry>
+	<entry key="sql.spatial.srid">3857</entry>
+	<!-- Client settings -->
+	<entry key="client.poi">-8574940.37580586,4707357.53625991</entry>
+	<entry key="client.tArrival">09/06/2010 10:00</entry>
+</properties>
+
