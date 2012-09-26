@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<properties>
+    <!-- Database network tables -->
+	<entry key="tbl.nodes">dc_nodes</entry>
+    <entry key="tbl.links">dc_edges</entry>
+    <entry key="tbl.times">dc_schedules</entry>
+    <entry key="tbl.dateCodes">dc_calendar</entry>
+    <!-- Database result tables -->
+    <entry key="tbl.isoLinks">dc_mierwine_rwb</entry>
+    <entry key="tbl.resultW">dc_mierwine_rw</entry>
+    <!-- Database indices -->
+    <entry key="idx.isoLinks">dc_mierwine_rwb_sidx</entry>
+    <entry key="idx.resultW">dc_mierwine_rw_sidx</entry>
+		<!-- Logging table -->
+		<entry key="tbl.log_circles">dc_mierwine_circles</entry>
+    <!-- Spatial settings -->
+    <entry key="sql.spatial.dim1.el">MDSYS.SDO_DIM_ELEMENT('LONGITUDE',-180,180,0.5)</entry>
+    <entry key="sql.spatial.dim2.el">MDSYS.SDO_DIM_ELEMENT('LATITUDE', -90, 90,0.5)</entry>
+    <entry key="sql.spatial.srid">31370</entry>
+		<!-- precomputation -->
+		<entry key="tbl.edge.density">dc_edge_density</entry>
+		<entry key="tbl.vertex.density">dc_vertex_density</entry>	
+</properties>

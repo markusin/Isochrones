@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/MrneX_trunk/src/isochrones/mrnex/utils/MemorySizeExperiment.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="isochrones.mrnex.utils.MemorySizeExperiment"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="dbType=postgresql&#10;algorithmName=MIERWINENaive&#10;algorithmClassName=isochrones.mierwine.algorithm.test.MemorySizeTestNaive&#10;dataset=SF&#10;dMax=10&#10;nOI=21355&#10;targetTime=2011-05-10T10:10&#10;speed=1.0&#10;mode=UNIMODAL&#10;durationCheckPoints=2,2,3,3,4,4,5,5,5,5,5,5,5,5,5,5,5,5,6,6,6,7,7,8,8,9&#10;sizeCheckPoints=2,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,30,35,40,45,50"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="MrneX_trunk"/>
+</launchConfiguration>

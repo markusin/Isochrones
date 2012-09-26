@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="libext/ant-contrib-1.0b3.jar"/>
+	<classpathentry kind="lib" path="libext/ojdbc6.jar"/>
+	<classpathentry kind="lib" path="libext/postgresql-8.4-702.jdbc4.jar" sourcepath="/Users/mainnerebner/.m2/repository/postgresql/postgresql/8.4-702.jdbc4/postgresql-8.4-702.jdbc4-sources.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Commons_trunk"/>
+	<classpathentry kind="lib" path="lib/commons.jar" sourcepath="/Commons_trunk"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>

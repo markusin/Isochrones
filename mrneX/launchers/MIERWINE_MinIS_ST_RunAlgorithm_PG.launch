@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/Commons_trunk/src/main/java/isochrones/launchers/algorithm/IsochroneLauncher.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/Java SE 6 (MacOS X Default)"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="isochrones.launchers.algorithm.IsochroneLauncher"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="algorithmClassName=isochrones.mierwine.algorithm.MIERWINEMinIS&#10;algorithmName=MIERWINEMinIS&#10;mode=MULTIMODAL&#10;dataset=ST&#10;nOI=5025&#10;targetTime=2010-09-01T10:30:00&#10;outputWriting=true&#10;debug=true&#10;dbType=postgresql&#10;dMax=120&#10;useDensity=false"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="MrneX_trunk"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms512m -Xmx1512m -Xss500m"/>
+</launchConfiguration>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/MrneX_trunk/src/isochrones/mrnex/utils/RuntimeSizeExperiment.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="isochrones.mrnex.utils.RuntimeSizeExperiment"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="dbType=postgresql&#10;algorithmName=MIERWINE&#10;algorithmClassName=isochrones.mierwine.algorithm.test.RuntimeSizeTest&#10;dataset=BZ&#10;dMax=40&#10;nOI=2000500&#10;targetTime=2011-05-10T10:10&#10;speed=1.0&#10;mode=MULTIMODAL&#10;durationCheckPoints=1,11,14,17,19,21,23,25,28,31,35,46,65&#10;sizeCheckPoints=1,200,400,600,800,1000,1200,1400,1600,1800,2000,2200,2400&#10;outputFile=out.log&#10;singleBreakpoint=true"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="MrneX_trunk"/>
+</launchConfiguration>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<!-- Global database settings -->
+	<entry key="db.vendor">postgresql</entry>
+	<entry key="db.maxConnections">50</entry>
+	<entry key="db.batchSize">250</entry>
+	<!-- Oracle database -->
+	<entry key="oracle.jdbc.servername">bz10m.inf.unibz.it</entry>
+	<entry key="oracle.jdbc.database">bz10m</entry>
+	<entry key="oracle.jdbc.username">iso_prod</entry>
+	<entry key="oracle.jdbc.password">iso_prod</entry>
+	<entry key="oracle.jdbc.port">1521</entry>
+	<!-- Postgres database -->
+	<entry key="org.postgresql.servername">localhost</entry>
+	<entry key="org.postgresql.database">iso2</entry>
+	<entry key="org.postgresql.username">postgres</entry>
+	<entry key="org.postgresql.password">AifaXub2</entry>
+	<entry key="org.postgresql.port">5432</entry>
+	<!-- Computation parameters7-->
+	<entry key="par.defaultWalkingSpeed">1.0</entry>
+	<!-- Autorun parameters -->
+	<entry key="par.mode">1</entry>
+	<entry key="par.walkingSpeed">1.0</entry>
+	<!-- Test parameters -->
+	<entry key="par.timeInterval">1</entry>
+	<entry key="par.range">10</entry>
+	<entry key="par.runsPerTime">10</entry>
+	<!-- Test parameters -->
+	<entry key="cfg.flushLimit">100</entry>
+	<entry key="limit.radius">100</entry>
+	<entry key="limit.density">1</entry>
+</properties>

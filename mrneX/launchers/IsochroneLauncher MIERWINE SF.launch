@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/bine_base_staging/src/isochrones/launchers/algorithm/IsochroneLauncher.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="isochrones.launchers.algorithm.IsochroneLauncher"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="dbType=postgresql&#10;algorithmName=MIERWINE&#10;algorithmClassName=isochrones.mierwine.algorithm.MIERWINE&#10;dataset=SF&#10;dMax=61 &#10;nOI=21355&#10;targetTime=2010-11-22T09:50&#10;speed=1.0&#10;mode=MULTIMODAL&#10;outputWriting=true&#10;debug=true&#10;useDensity=true"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="MIERWINE_staging"/>
+</launchConfiguration>

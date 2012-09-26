@@ -1,0 +1,1 @@
+SELECT edge_id,"offset" FROM @TABLE_NAME@ order by edge_id

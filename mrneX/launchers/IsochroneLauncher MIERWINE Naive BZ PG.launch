@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/Commons_trunk/src/main/java/isochrones/launchers/algorithm/IsochroneLauncher.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="isochrones.launchers.algorithm.IsochroneLauncher"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="dbType=postgresql&#10;algorithmName=MIERWINE&#10;algorithmClassName=isochrones.mierwine.algorithm.MIERWINENaive&#10;dataset=BZ&#10;dMax=30&#10;nOI=2000500&#10;targetTime=2011-05-10T10:10:00&#10;speed=1.0&#10;mode=MULTIMODAL&#10;outputWriting=true&#10;debug=true&#10;useDensity=false"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="MrneX_trunk"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dtbl.log_vertex=bz_mierwine_naive_vertices"/>
+</launchConfiguration>

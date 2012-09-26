@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/MrneX_trunk/src/isochrones/mrnex/utils/MemoryDurationExperiment.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="isochrones.mrnex.utils.MemoryDurationExperiment"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="dbType=postgresql&#10;algorithmName=MIERWINENaive&#10;algorithmClassName=isochrones.mierwine.algorithm.test.MemoryDurationTestNaive&#10;dataset=ST&#10;dMax=40&#10;lOI=2177402,56.563406564693324&#10;targetTime=2010-09-01T09:32:00&#10;speed=1.0&#10;mode=MULTIMODAL&#10;durationCheckPoints=1,5,10,15,20,25,30,40,50,60&#10;outputFile=out.log&#10;singleBreakpoint=true"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="MrneX_trunk"/>
+</launchConfiguration>

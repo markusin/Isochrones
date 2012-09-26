@@ -1,0 +1,1345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="info" basedir="../">
+	<xmlproperty file="./ant/properties.xml" />
+	<!--xmlproperty file="./ant/properties.xml" semanticattributes="true" includesemanticattribute="true" /-->
+
+	<!--import>
+    <javaresource name="common.xml">
+      <classpath location="${properties.project.libDir}/bineBase.jar"/>
+    </javaresource>
+  </import
+	works only with ant version 1.8 or later
+   -->
+	<import file="${basedir}/${properties.project.libDir}/commons.xml" />
+
+	<property name="mdijkstra.basedir" location="../../MDijkstra/trunk" />
+	<property name="mdijkstra.algorithm" value="MDijkstra" />
+
+
+	<target name="info">
+		<echo>ant setup  --> ##### Algorithm ${properties.project.name}: available tasks #####</echo>
+		<antcall target="commonInfo" />
+		<echo>ant runConfidenceIntervalExperimentsSF --> runs confidence interval tests for city San Francisco (does not write results in DB)</echo>
+		<echo>ant runConfidenceIntervalExperimentsST --> runs confidence interval tests for South Tyrol (does not write results in DB)</echo>
+		<echo>ant runConfidenceIntervalExperimentsDC --> runs confidence interval tests for Washington DC (does not write results in DB)</echo>
+	</target>
+
+	<!-- 
+			************************************* 
+      	runtime duraiton experiment section
+      *************************************  
+   -->
+
+	<!-- ================================= 
+			          target: runtimeDurationExperiments_MM 
+			         ================================= -->
+	<target name="runtimeDurationExperiments_MM">
+		<antcall target="runtimeDurationExperimentBZ">
+			<param name="singleBreakpoint" value="true" />
+		</antcall>
+		<antcall target="runtimeDurationExperimentSF">
+			<param name="singleBreakpoint" value="true" />
+		</antcall>
+		<antcall target="runtimeDurationExperimentST">
+			<param name="singleBreakpoint" value="true" />
+		</antcall>
+		<antcall target="runtimeDurationExperimentIT">
+			<param name="singleBreakpoint" value="true" />
+		</antcall>
+	</target>
+
+
+	<!-- ================================= 
+          target: runtimeDurationExperimentsVaryingDensityAll             
+         ================================= -->
+	<target name="runtimeDurationExperimentsVaryingDensityAll" depends="runtimeDurationExperimentsVaryingDensityBZ,runtimeDurationExperimentsVaryingDensitySF,runtimeDurationExperimentsVaryingDensityST,runtimeDurationExperimentsVaryingDensityIT">
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: runtimeDurationExperimentsVaryingDensityBZ                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="runtimeDurationExperimentsVaryingDensityBZ">
+		<delete dir="${basedir}/out/" includes="**BZ**DL**.csv" failonerror="false" />
+		<foreach list="${properties.tests.runtimeDurationTest.densityLimits}" target="runtimeDurationExperimentAllBZ" param="densityLimit" delimiter=",">
+			<param name="useDensity" value="true" />
+			<param name="frequency" value="30" />
+		</foreach>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+	          target: runtimeDurationExperimentsVaryingDensitySF                      
+	         - - - - - - - - - - - - - - - - - -->
+	<target name="runtimeDurationExperimentsVaryingDensitySF">
+		<delete dir="${basedir}/out/" includes="**SF**DL**.csv" failonerror="false" />
+		<foreach list="${properties.tests.runtimeDurationTest.densityLimits}" target="runtimeDurationExperimentAllSF" param="densityLimit" delimiter=",">
+			<param name="useDensity" value="true" />
+		</foreach>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+	          target: runtimeDurationExperimentsVaryingDensityST                      
+	         - - - - - - - - - - - - - - - - - -->
+	<target name="runtimeDurationExperimentsVaryingDensityST">
+		<delete dir="${basedir}/out/" includes="**ST**DL**.csv" failonerror="false" />
+		<foreach list="${properties.tests.runtimeDurationTest.densityLimits}" target="runtimeDurationExperimentAllST" param="densityLimit" delimiter=",">
+			<param name="useDensity" value="true" />
+		</foreach>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+	          target: runtimeDurationExperimentsVaryingDensityIT                    
+	         - - - - - - - - - - - - - - - - - -->
+	<target name="runtimeDurationExperimentsVaryingDensityIT">
+		<delete dir="${basedir}/out/" includes="**IT**DL**.csv" failonerror="false" />
+		<foreach list="${properties.tests.runtimeDurationTest.densityLimits}" target="runtimeDurationExperimentAllIT" param="densityLimit" delimiter=",">
+			<param name="useDensity" value="true" />
+			<param name="frequency" value="5" />
+		</foreach>
+	</target>
+
+
+	
+	<target name="runtimeDurationExperimentBZDebug" description="description">
+		<var name="durationCheckpoints" value="1" />
+		<for begin="2" end="60" step="1" param="duration">
+			<sequential>
+				<var name="durationCheckpoints" value="${durationCheckpoints},@{duration}" />
+			</sequential>
+		</for>
+
+		<antcall target="runtimeDurationExperimentBZ">
+			<param name="durationCheckPoints" value="${durationCheckpoints}" />
+			<param name="singleBreakpoint" value="true" />
+		</antcall>
+	</target>
+
+	
+	<target name="runtimeDurationExperimentDetailedBZ" description="description">
+		<antcall target="runtimeDurationExperimentBZ">
+			<param name="testClassName" value="${properties.tests.runtimeDurationTestDetailed(className)}" />
+			<param name="visibleColumns" value="3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,33,34" />
+			<param name="algorithmName" value="${properties.project.algorithm(name)}Det" />
+			<param name="algorithmClassName" value="${properties.project.algorithm.runtimeDurationDetailed(className)}" />
+			<param name="singleBreakpoint" value="true" />
+		</antcall>
+	</target>
+
+	<target name="runtimeDurationExperimentDetailedSF" description="description">
+		<antcall target="runtimeDurationExperimentSF">
+			<param name="testClassName" value="${properties.tests.runtimeDurationTestDetailed(className)}" />
+			<param name="visibleColumns" value="3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,33,34" />
+			<param name="algorithmName" value="${properties.project.algorithm(name)}Det" />
+			<param name="algorithmClassName" value="${properties.project.algorithm.runtimeDurationDetailed(className)}" />
+			<param name="singleBreakpoint" value="true" />
+		</antcall>
+	</target>
+
+	<target name="runtimeDurationExperimentDetailedST" description="description">
+		<antcall target="runtimeDurationExperimentST">
+			<param name="testClassName" value="${properties.tests.runtimeDurationTestDetailed(className)}" />
+			<param name="visibleColumns" value="3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,33,34" />
+			<param name="algorithmName" value="${properties.project.algorithm(name)}Det" />
+			<param name="algorithmClassName" value="${properties.project.algorithm.runtimeDurationDetailed(className)}" />
+			<param name="singleBreakpoint" value="true" />
+		</antcall>
+	</target>
+
+	<target name="runtimeDurationExperimentDetailedIT" description="description">
+		<antcall target="runtimeDurationExperimentIT">
+			<param name="testClassName" value="${properties.tests.runtimeDurationTestDetailed(className)}" />
+			<param name="visibleColumns" value="3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,33,34" />
+			<param name="algorithmName" value="${properties.project.algorithm(name)}Det" />
+			<param name="algorithmClassName" value="${properties.project.algorithm.runtimeDurationDetailed(className)}" />
+			<param name="singleBreakpoint" value="true" />
+		</antcall>
+	</target>
+
+	<target name="reachabilityTest">
+		<!-- default parameters, can be overwritten -->
+		<property name="dataset" value="${properties.dataSets.BZ(shortName)}" />
+		<property name="name" value="${properties.dataSets.BZ(name)}" />
+		<property name="lOI" value="${properties.dataSets.BZ.parameters.poi.central.locationOfInterests}" />
+		<property name="startTargetTime" value="${properties.dataSets.BZ.startTargetTime}" />
+		<property name="endTargetTime" value="${properties.dataSets.BZ.endTargetTime}" />
+		<property name="dMax" value="${properties.dataSets.BZ.parameters.dMax}" />
+
+		<!-- overide only in some special cases -->
+		<property name="mode" value="${properties.tests.reachabilityTest.mode}" />
+
+		<echo message="Starting the reachability tests for isochrones for ${name}" />
+		<java classname="${properties.tests.reachabilityTest(className)}" classpathref="path.libraries" fork="true">
+			<arg value="algorithm=${properties.project.name}" />
+			<arg value="dataset=${dataset}" />
+			<arg value="lOI=${lOI}" />
+			<arg value="oOI=${oOI}" />
+			<arg value="dMax=${dMax}" />
+			<arg value="startTargetTime=${startTargetTime}" />
+			<arg value="endTargetTime=${endTargetTime}" />
+			<arg value="speed=${properties.tests.reachabilityTest.speed}" />
+			<arg value="mode=${mode}" />
+			<arg value="outputWriting=${properties.tests.reachabilityTest.outputWriting}" />
+			<arg value="optimization=${properties.tests.reachabilityTest.optimization}" />
+		</java>
+	</target>
+
+	<target name="runReachabilityExperiments" description="description" depends="runReachabilityTestBZ,runReachabilityTestSF,runReachabilityTestDC" />
+
+	<target name="runReachabilityTestBZ" description="description">
+		<antcall target="reachabilityTest" />
+	</target>
+
+	<target name="runReachabilityTestSF" description="description">
+		<antcall target="reachabilityTest">
+			<param name="dataset" value="${properties.dataSets.SF(shortName)}" />
+			<param name="name" value="${properties.dataSets.SF(name)}" />
+			<param name="lOI" value="${properties.dataSets.SF.parameters.poi.central.locationOfInterests}" />
+			<param name="startTargetTime" value="${properties.dataSets.SF.startTargetTime}" />
+			<param name="endTargetTime" value="${properties.dataSets.SF.endTargetTime}" />
+			<param name="dMax" value="${properties.dataSets.SF.parameters.dMax}" />
+			<param name="snapSize" value="${properties.dataSets.SF.snapSize(multimodal)}" />
+		</antcall>
+	</target>
+
+
+	<target name="runReachabilityTestDC" description="description">
+		<antcall target="reachabilityTest">
+			<param name="dataset" value="${properties.dataSets.DC(shortName)}" />
+			<param name="name" value="${properties.dataSets.DC(name)}" />
+			<param name="lOI" value="${properties.dataSets.DC.parameters.poi.central.locationOfInterests}" />
+			<param name="targetTimes" value="${properties.dataSets.DC.tArrivals}" />
+			<param name="dMax" value="${properties.dataSets.DC.parameters.dMax}" />
+			<param name="snapSize" value="${properties.dataSets.DC.snapSize(multimodal)}" />
+		</antcall>
+	</target>
+
+	<!-- 
+			************************************* 
+      	runtime size experiment section
+       *************************************  
+   -->
+
+
+	<!-- ================================= 
+					          target: runtimeSizeExperiments_MM 
+					          overrides the target in commons because of setting some properties             
+					         ================================= -->
+	<target name="runtimeSizeExperiments_MM">
+		<antcall target="runtimeSizeExperimentBZ">
+			<param name="durationCheckPoints" value="${properties.dataSets.BZ.parameters.sizeCheckPoints.duration}" />
+			<param name="singleBreakpoint" value="true" />
+		</antcall>
+		<antcall target="runtimeSizeExperimentSF">
+			<param name="durationCheckPoints" value="${properties.dataSets.SF.parameters.sizeCheckPoints.duration}" />
+			<param name="singleBreakpoint" value="true" />
+		</antcall>
+		<!--antcall target="runtimeSizeTestDC"value="${properties.dataSets.DC.parameters.sizeCheckPoints.duration}" />
+				<param name="singleBreakponts" value="true" />
+			</antcall> /-->
+		<antcall target="runtimeSizeExperimentST">
+			<param name="durationCheckPoints" value="${properties.dataSets.ST.parameters.sizeCheckPoints.duration}" />
+			<param name="singleBreakpoint" value="true" />
+		</antcall>
+		<antcall target="runtimeSizeExperimentIT">
+			<param name="durationCheckPoints" value="${properties.dataSets.IT.parameters.sizeCheckPoints.duration}" />
+			<param name="singleBreakpoint" value="true" />
+		</antcall>
+	</target>
+
+	<!-- Memory duration test -->
+
+	<!-- ================================= 
+          target: runMemoryDurationExperiments_MM              
+         ================================= -->
+	<target name="runMemoryDurationExperiments_MM" description="Runs all memory duration tests">
+		<antcall target="runMemoryDurationTestBZ" />
+		<antcall target="runMemoryDurationTestSF" />
+		<antcall target="runMemoryDurationTestST" />
+		<antcall target="runMemoryDurationTestIT" />
+	</target>
+
+	<!-- ================================= 
+          target: runMemorySizeExperiments_MM              
+         ================================= -->
+	<target name="runMemorySizeExperiments_MM" description="Runs all memory size tests">
+		<antcall target="runMemorySizeTestBZ" />
+		<antcall target="runMemorySizeTestSF" />
+		<antcall target="runMemorySizeTestST" />
+		<antcall target="runMemorySizeTestIT" />
+	</target>
+
+	<!-- Monitor network loading test -->
+
+
+	<!-- Dataset BZ -->
+	<target name="runMonitorNetworkLoadingTestBZ" description="description">
+		<antcall target="monitorNetworkLoadingTest">
+			<param name="dataset" value="${properties.dataSets.BZ(shortName)}" />
+			<param name="name" value="${properties.dataSets.BZ(name)}" />
+			<param name="nOI" value="${properties.dataSets.BZ.parameters.poi.central.nodeOfInterests}" />
+			<param name="lOI" value="${properties.dataSets.BZ.parameters.poi.central.locationOfInterests}" />
+			<param name="targetTime" value="${properties.dataSets.BZ.parameters.tArrival}" />
+			<param name="dMax" value="${properties.dataSets.BZ.parameters.dMax}" />
+			<param name="durationCheckPoints" value="${properties.dataSets.BZ.parameters.durationCheckPoints}" />
+		</antcall>
+	</target>
+
+		<!-- Dataset ST -->
+	<target name="runMonitorNetworkLoadingTestST" description="description">
+		<antcall target="monitorNetworkLoadingTest">
+			<param name="dataset" value="${properties.dataSets.ST(shortName)}" />
+			<param name="name" value="${properties.dataSets.ST(name)}" />
+			<param name="nOI" value="${properties.dataSets.ST.parameters.poi.central.nodeOfInterests}" />
+			<param name="lOI" value="${properties.dataSets.ST.parameters.poi.central.locationOfInterests}" />
+			<param name="targetTime" value="${properties.dataSets.ST.parameters.tArrival}" />
+			<param name="dMax" value="${properties.dataSets.ST.parameters.dMax}" />
+			<param name="durationCheckPoints" value="${properties.dataSets.ST.parameters.durationCheckPoints}" />
+		</antcall>
+	</target>
+
+	<!-- Dataset SF -->
+	<target name="runMonitorNetworkLoadingTestSF" description="description">
+		<antcall target="monitorNetworkLoadingTest">
+			<param name="dataset" value="${properties.dataSets.SF(shortName)}" />
+			<param name="name" value="${properties.dataSets.SF(name)}" />
+			<param name="nOI" value="${properties.dataSets.SF.parameters.poi.central.nodeOfInterests}" />
+			<param name="lOI" value="${properties.dataSets.SF.parameters.poi.central.locationOfInterests}" />
+			<param name="targetTime" value="${properties.dataSets.SF.parameters.tArrival}" />
+			<param name="dMax" value="${properties.dataSets.SF.parameters.dMax}" />
+			<param name="durationCheckPoints" value="${properties.dataSets.SF.parameters.durationCheckPoints}" />
+		</antcall>
+	</target>
+
+	<!-- Dataset IT -->
+	<target name="runMonitorNetworkLoadingTestIT" description="description">
+		<antcall target="monitorNetworkLoadingTest">
+			<param name="dataset" value="${properties.dataSets.IT(shortName)}" />
+			<param name="name" value="${properties.dataSets.IT(name)}" />
+			<param name="nOI" value="${properties.dataSets.IT.parameters.poi.central.nodeOfInterests}" />
+			<param name="lOI" value="${properties.dataSets.IT.parameters.poi.central.locationOfInterests}" />
+			<param name="targetTime" value="${properties.dataSets.IT.parameters.tArrival}" />
+			<param name="dMax" value="${properties.dataSets.IT.parameters.dMax}" />
+			<param name="durationCheckPoints" value="${properties.dataSets.IT.parameters.durationCheckPoints}" />
+		</antcall>
+	</target>
+
+	<target name="monitorNetworkLoadingTest" description="Measures the loaded network information">
+		<!-- default parameters, can be overwritten -->
+		<property name="dataset" value="${properties.dataSets.BZ(shortName)}" />
+		<property name="name" value="${properties.dataSets.BZ(name)}" />
+		<property name="lOI" value="SetMe" />
+		<property name="algorithmName" value="${properties.project.algorithm(name)}" />
+		<property name="algorithmClassName" value="${properties.project.algorithm.networkMonitoring(className)}" />
+
+		<!-- overide only in some special cases -->
+		<property name="mode" value="${properties.tests.memoryDurationTest.mode}" />
+
+		<property name="nOI" value="SetMe" />
+		<if>
+			<equals arg1="${nOI}" arg2="SetMe" />
+			<then>
+				<property name="outputFile" value="${algorithmName}_${dataset}_${mode}_${lOI}_monitorNW_duration.dat" />
+			</then>
+			<else>
+				<property name="outputFile" value="${algorithmName}_${dataset}_${mode}_${nOI}_monitorNW_duration.dat" />
+			</else>
+		</if>
+
+		<property name="durationCheckPoints" value="SetMe" />
+		<if>
+			<equals arg1="${durationCheckPoints}" arg2="SetMe" />
+			<then>
+				<property name="checkPts" value="${dMax}" />
+			</then>
+			<else>
+				<property name="checkPts" value="${durationCheckPoints}" />
+			</else>
+		</if>
+
+		<property name="outputWriting" value="${properties.tests.memoryDurationTest.outputWriting}" />
+		<property name="network" value="" />
+		<property name="snapSize" value="${properties.dataSets.BZ.snapSize}" />
+		<property name="speed" value="${properties.tests.memoryDurationTest.speed}" />
+
+		<echo message="Starting the memory-duration tests for isochrones for ${name}" />
+		<java classname="${properties.tests.monitorNetworkLoadingTest(className)}" classpathref="path.libraries" fork="true">
+			<arg value="dbType=${properties.project.database}" />
+			<arg value="algorithmName=${algorithmName}" />
+			<arg value="algorithmClassName=${algorithmClassName}" />
+			<arg value="dataset=${dataset}" />
+			<arg value="nOI=${nOI}" />
+			<arg value="lOI=${lOI}" />
+			<arg value="dMax=${dMax}" />
+			<arg value="targetTime=${targetTime}" />
+			<arg value="speed=${speed}" />
+			<arg value="mode=${mode}" />
+			<arg value="outputFile=${outputFile}" />
+			<arg value="durationCheckPoints=${checkPts}" />
+			<arg value="singleBreakpoint=true" />
+			<jvmarg value="-Xmx${properties.tests(reservedMemorySize)}m" />
+		</java>
+	</target>
+
+	<target name="computeAllBreakEvenpointsMRNEX">
+		<antcall target="computeBreakevenPoint">
+			<param name="fileIn1" value="/data/eclipse-workspaces/MrneX_trunk/out/MrneX_SF_MULTIMODAL_21355_runtime_duration.csv" />
+			<param name="fileIn2" value="/data/develop/eclipse_workspace/algorithms/MDijkstra/staging/out/MDijkstra_SF_MULTIMODAL_21355_runtime_duration.csv" />
+			<param name="fileOut" value="../out/be_sf.dat" />
+			<param name="columnIndex" value="3" />
+		</antcall>
+	</target>
+
+
+	<target name="computeAllBreakEvenpointsRuntimeDuration">
+		<!--
+		<property name="dSets" value="${properties.dataSets.BZ(shortName)},${properties.dataSets.SF(shortName)},${properties.dataSets.ST(shortName)},${properties.dataSets.IT(shortName)}" />
+-->
+		<property name="dSets" value="${properties.dataSets.BZ(shortName)},${properties.dataSets.SF(shortName)},${properties.dataSets.ST(shortName)}" />
+
+		<!-- MrneX  -->
+		<foreach list="${dSets}" target="computeBreakEvenpointsRuntimeDuration" param="dataSet" delimiter=",">
+			<param name="algorithmName" value="${properties.project.algorithm(name)}" />
+		</foreach>
+		
+
+	</target>
+
+	<target name="computeBreakEvenpointsRuntimeDuration">
+		<property name="algorithmName" value="${properties.project.algorithm(name)}" />
+		<property name="dataSet" value="${properties.project.algorithm(name)}" />
+		<property name="mode" value="${properties.tests.runtimeDurationTest.mode}" />
+
+		<switch value="${dataSet}">
+			<case value="${properties.dataSets.BZ(shortName)}">
+				<property name="qPoint" value="${properties.dataSets.BZ.parameters.poi.central.nodeOfInterests}" />
+			</case>
+			<case value="${properties.dataSets.SF(shortName)}">
+				<property name="qPoint" value="${properties.dataSets.SF.parameters.poi.central.nodeOfInterests}" />
+			</case>
+			<case value="${properties.dataSets.ST(shortName)}">
+				<property name="qPoint" value="${properties.dataSets.ST.parameters.poi.central.nodeOfInterests}" />
+			</case>
+			<case value="${properties.dataSets.DC(shortName)}">
+				<property name="qPoint" value="${properties.dataSets.DC.parameters.poi.central.nodeOfInterests}" />
+			</case>
+			<case value="${properties.dataSets.IT(shortName)}">
+				<property name="qPoint" value="${properties.dataSets.IT.parameters.poi.central.nodeOfInterests}" />
+			</case>
+		</switch>
+
+		<property name="filePreSuffix" value="runtime_duration" />
+
+		<property name="fileIn1" location="${basedir}/out/${algorithmName}_${dataSet}_${mode}_${qPoint}_${filePreSuffix}.csv" />
+		<property name="fileIn2" location="${mdijkstra.basedir}/out/${mdijkstra.algorithm}_${dataSet}_${mode}_${qPoint}_${filePreSuffix}.csv" />
+		<property name="fileOut" location="${basedir}/out/${algorithmName}_${dataSet}_${mode}_${qPoint}_${filePreSuffix}_BEPt.csv" />
+		<property name="columnIndex" value="3" />
+
+		<antcall target="computeBreakevenPoint">
+			<param name="fileIn1" value="${fileIn1}" />
+			<param name="fileIn2" value="${fileIn2}" />
+			<param name="fileOut" value="${fileOut}" />
+			<param name="columnIndex" value="${columnIndex}" />
+		</antcall>
+	</target>
+
+	<target name="testRandomTStampTest" description="Sets a random timeStamp">
+		<property name="from" value="2012-07-07T10:00" />
+		<property name="to" value=" 2012-07-07T12:00" />
+		<property name="pattern" value="yyyy-MM-DD'T'HH:mm" />
+		<randomTimeStamp from="${from}" to="${to}" pattern="${pattern}" property="propertyName" overide="true" />
+		<echo>Timestamp: ${propertyName}</echo>
+	</target>
+
+
+	<!-- ================================= 
+          target: runtimeDurationExperimentsVarT_BZ              
+         ================================= -->
+	<target name="runtimeDurationExperimentsVarT_BZ" description="description">
+		<delete failonerror="false">
+			<fileset dir="${basedir}/out/lowfrequent">
+				<include name="*${properties.dataSets.BZ}*_runtime_duraiton.csv" />
+			</fileset>
+			<fileset dir="${basedir}/out/highfrequent">
+				<include name="*${properties.dataSets.BZ}*_runtime_duraiton.csv" />
+			</fileset>
+			<fileset dir="${basedir}/out/mediumfrequent">
+				<include name="*${properties.dataSets.BZ}*_runtime_duraiton.csv" />
+			</fileset>
+		</delete>
+
+		<loadproperties srcFile="${basedir}/in/${properties.dataSets.BZ(shortName)}_arrivaltimes.properties" />
+		<foreach list="${lowfrequent.values}" target="runtimeDurationExperimentAllBZ" param="targetTime" delimiter=",">
+			<param name="useDensity" value="true" />
+			<param name="outputDir" value="${basedir}/out/lowfrequent" />
+		</foreach>
+		<foreach list="${highfrequent.values}" target="runtimeDurationExperimentAllBZ" param="targetTime" delimiter=",">
+			<param name="useDensity" value="true" />
+			<param name="outputDir" value="${basedir}/out/highfrequent" />
+		</foreach>
+
+		<foreach list="${mediumfrequent.values}" target="runtimeDurationExperimentAllBZ" param="targetTime" delimiter=",">
+			<param name="useDensity" value="true" />
+			<param name="outputDir" value="${basedir}/out/mediumfrequent" />
+		</foreach>
+	</target>
+
+	<!-- ================================= 
+	          target: runtimeDurationExperimentsVarT_SF              
+	         ================================= -->
+	<target name="runtimeDurationExperimentsVarT_SF" description="description">
+		<delete failonerror="false">
+			<fileset dir="${basedir}/out/lowfrequent">
+				<include name="*${properties.dataSets.SF}*_runtime_duraiton.csv" />
+			</fileset>
+			<fileset dir="${basedir}/out/highfrequent">
+				<include name="*${properties.dataSets.SF}*_runtime_duraiton.csv" />
+			</fileset>
+			<fileset dir="${basedir}/out/mediumfrequent">
+				<include name="*${properties.dataSets.SF}*_runtime_duraiton.csv" />
+			</fileset>
+		</delete>
+
+		<loadproperties srcFile="${basedir}/in/${properties.dataSets.SF(shortName)}_arrivaltimes.properties" />
+		<foreach list="${lowfrequent.values}" target="runtimeDurationExperimentAllSF" param="targetTime" delimiter=",">
+			<param name="useDensity" value="true" />
+			<param name="outputDir" value="${basedir}/out/lowfrequent" />
+		</foreach>
+
+		<foreach list="${highfrequent.values}" target="runtimeDurationExperimentAllSF" param="targetTime" delimiter=",">
+			<param name="useDensity" value="true" />
+			<param name="outputDir" value="${basedir}/out/highfrequent" />
+		</foreach>
+
+		<foreach list="${mediumfrequent.values}" target="runtimeDurationExperimentAllSF" param="targetTime" delimiter=",">
+			<param name="useDensity" value="true" />
+			<param name="outputDir" value="${basedir}/out/mediumfrequent" />
+		</foreach>
+	</target>
+
+	<!-- ================================= 
+		          target: runtimeDurationExperimentsVarT_ST              
+		         ================================= -->
+	<target name="runtimeDurationExperimentsVarT_ST" description="description">
+		<delete failonerror="false">
+			<fileset dir="${basedir}/out/lowfrequent">
+				<include name="*${properties.dataSets.ST}*_runtime_duraiton.csv" />
+			</fileset>
+			<fileset dir="${basedir}/out/highfrequent">
+				<include name="*${properties.dataSets.ST}*_runtime_duraiton.csv" />
+			</fileset>
+			<fileset dir="${basedir}/out/mediumfrequent">
+				<include name="*${properties.dataSets.ST}*_runtime_duraiton.csv" />
+			</fileset>
+		</delete>
+
+		<loadproperties srcFile="${basedir}/in/${properties.dataSets.ST(shortName)}_arrivaltimes.properties" />
+		<foreach list="${lowfrequent.values}" target="runtimeDurationExperimentAllST" param="targetTime" delimiter=",">
+			<param name="useDensity" value="true" />
+			<param name="outputDir" value="${basedir}/out/lowfrequent" />
+		</foreach>
+
+		<foreach list="${highfrequent.values}" target="runtimeDurationExperimentAllST" param="targetTime" delimiter=",">
+			<param name="useDensity" value="true" />
+			<param name="outputDir" value="${basedir}/out/highfrequent" />
+		</foreach>
+
+		<foreach list="${mediumfrequent.values}" target="runtimeDurationExperimentAllST" param="targetTime" delimiter=",">
+			<param name="useDensity" value="true" />
+			<param name="outputDir" value="${basedir}/out/mediumfrequent" />
+		</foreach>
+	</target>
+
+	<!-- ================================= 
+		          target: runtimeDurationExperimentsVarT_IT              
+		         ================================= -->
+	<target name="runtimeDurationExperimentsVarT_IT" description="description">
+		<delete failonerror="false">
+			<fileset dir="${basedir}/out/lowfrequent">
+				<include name="*${properties.dataSets.IT}*_runtime_duraiton.csv" />
+			</fileset>
+			<fileset dir="${basedir}/out/highfrequent">
+				<include name="*${properties.dataSets.IT}*_runtime_duraiton.csv" />
+			</fileset>
+			<fileset dir="${basedir}/out/mediumfrequent">
+				<include name="*${properties.dataSets.IT}*_runtime_duraiton.csv" />
+			</fileset>
+		</delete>
+		<loadproperties srcFile="${basedir}/in/${properties.dataSets.IT(shortName)}_arrivaltimes.properties" />
+		<foreach list="${lowfrequent.values}" target="runtimeDurationExperimentAllIT" param="targetTime" delimiter=",">
+			<param name="useDensity" value="true" />
+			<param name="outputDir" value="${basedir}/out/lowfrequent" />
+		</foreach>
+
+		<foreach list="${highfrequent.values}" target="runtimeDurationExperimentAllIT" param="targetTime" delimiter=",">
+			<param name="useDensity" value="true" />
+			<param name="outputDir" value="${basedir}/out/highfrequent" />
+		</foreach>
+
+		<foreach list="${mediumfrequent.values}" target="runtimeDurationExperimentAllIT" param="targetTime" delimiter=",">
+			<param name="useDensity" value="true" />
+			<param name="outputDir" value="${basedir}/out/mediumfrequent" />
+		</foreach>
+	</target>
+
+	<!-- ================================= 
+	          target: generateRandomArrivaltimes              
+	         ================================= -->
+	<target name="generateRandomArrivaltimes">
+		<antcall target="generateRandomTimeValuesBZ" />
+		<antcall target="generateRandomTimeValuesSF" />
+		<antcall target="generateRandomTimeValuesST" />
+		<antcall target="generateRandomTimeValuesIT" />
+	</target>
+
+
+	<!-- ================================= 
+	          target: runtimeDurationExperimentAllVaryTArrival              
+	         ================================= -->
+	<target name="runtimeDurationExperimentAllVaryTArrival" description="description">
+		<antcall target="runtimeDurationExperimentsVarT_BZ" />
+		<antcall target="runtimeDurationExperimentsVarT_SF" />
+		<antcall target="runtimeDurationExperimentsVarT_ST" />
+		<antcall target="runtimeDurationExperimentsVarT_IT" />
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: generateRandomTimeValuesBZ                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="generateRandomTimeValuesBZ">
+		<property name="pattern" value="yyyy-MM-dd'T'HH:mm" />
+		<property name="arrivalDay" value="${properties.dataSets.BZ.parameters.arrivalDay}" />
+		<property name="outFile" location="${basedir}/in/${properties.dataSets.BZ(shortName)}_arrivaltimes.properties" />
+		<var name="fromTime" value="${properties.tests.cycles.lowfrequent(fromTime)}" />
+		<var name="toTime" value="${properties.dataSets.BZ.trafficPeriod.lowfrequent(toTime)}" />
+
+
+		<!-- Time intervals with low transport frequency -->
+		<var name="generated.values" value="" />
+		<for begin="1" end="${properties.dataSets.BZ.trafficPeriod.lowfrequent(iterations)}" step="1" param="iter">
+			<sequential>
+				<var name="fromTime" value="${arrivalDay}T${properties.dataSets.BZ.trafficPeriod.lowfrequent(fromTime)}" />
+				<var name="toTime" value="${arrivalDay}T${properties.dataSets.BZ.trafficPeriod.lowfrequent(toTime)}" />
+				<randomTimeStamp from="${fromTime}" to="${toTime}" pattern="${pattern}" property="arrivalTime" override="true" />
+				<if>
+					<equals arg1="${generated.values}" arg2="" />
+					<then>
+						<var name="generated.values" value="${arrivalTime}" />
+					</then>
+					<else>
+						<var name="generated.values" value="${generated.values},${arrivalTime}" />
+					</else>
+				</if>
+			</sequential>
+		</for>
+		<echo file="${outFile}" append="false">lowfrequent.values=${generated.values}${line.separator}</echo>
+
+		<!-- Time intervals with high transport frequency -->
+		<var name="generated.values" value="" />
+		<for begin="1" end="${properties.dataSets.BZ.trafficPeriod.highfrequent(iterations)}" step="1" param="iter">
+			<sequential>
+				<var name="fromTime" value="${arrivalDay}T${properties.dataSets.BZ.trafficPeriod.highfrequent(fromTime)}" />
+				<var name="toTime" value="${arrivalDay}T${properties.dataSets.BZ.trafficPeriod.highfrequent(toTime)}" />
+				<randomTimeStamp from="${fromTime}" to="${toTime}" pattern="${pattern}" property="arrivalTime" override="true" />
+				<if>
+					<equals arg1="${generated.values}" arg2="" />
+					<then>
+						<var name="generated.values" value="${arrivalTime}" />
+					</then>
+					<else>
+						<var name="generated.values" value="${generated.values},${arrivalTime}" />
+					</else>
+				</if>
+			</sequential>
+		</for>
+		<echo file="${outFile}" append="true">highfrequent.values=${generated.values}${line.separator}</echo>
+
+		<!-- Time intervals with medium transport frequency -->
+		<var name="generated.values" value="" />
+		<for begin="1" end="${properties.dataSets.BZ.trafficPeriod.mediumfrequent(iterations)}" step="1" param="iter">
+			<sequential>
+				<var name="fromTime" value="${arrivalDay}T${properties.dataSets.BZ.trafficPeriod.mediumfrequent(fromTime)}" />
+				<var name="toTime" value="${arrivalDay}T${properties.dataSets.BZ.trafficPeriod.mediumfrequent(toTime)}" />
+				<randomTimeStamp from="${fromTime}" to="${toTime}" pattern="${pattern}" property="arrivalTime" override="true" />
+				<if>
+					<equals arg1="${generated.values}" arg2="" />
+					<then>
+						<var name="generated.values" value="${arrivalTime}" />
+					</then>
+					<else>
+						<var name="generated.values" value="${generated.values},${arrivalTime}" />
+					</else>
+				</if>
+			</sequential>
+		</for>
+		<echo file="${outFile}" append="true">mediumfrequent.values=${generated.values}${line.separator}</echo>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+	          target: generateRandomTimeValuesSF                      
+	         - - - - - - - - - - - - - - - - - -->
+	<target name="generateRandomTimeValuesSF">
+		<property name="pattern" value="yyyy-MM-dd'T'HH:mm" />
+		<property name="arrivalDay" value="${properties.dataSets.SF.parameters.arrivalDay}" />
+		<property name="outFile" location="${basedir}/in/${properties.dataSets.SF(shortName)}_arrivaltimes.properties" />
+		<var name="fromTime" value="${properties.tests.cycles.lowfrequent(fromTime)}" />
+		<var name="toTime" value="${properties.dataSets.SF.trafficPeriod.lowfrequent(toTime)}" />
+
+
+		<!-- Time intervals with low transport frequency -->
+		<var name="generated.values" value="" />
+		<for begin="1" end="${properties.dataSets.SF.trafficPeriod.lowfrequent(iterations)}" step="1" param="iter">
+			<sequential>
+				<var name="fromTime" value="${arrivalDay}T${properties.dataSets.SF.trafficPeriod.lowfrequent(fromTime)}" />
+				<var name="toTime" value="${arrivalDay}T${properties.dataSets.SF.trafficPeriod.lowfrequent(toTime)}" />
+				<randomTimeStamp from="${fromTime}" to="${toTime}" pattern="${pattern}" property="arrivalTime" override="true" />
+				<if>
+					<equals arg1="${generated.values}" arg2="" />
+					<then>
+						<var name="generated.values" value="${arrivalTime}" />
+					</then>
+					<else>
+						<var name="generated.values" value="${generated.values},${arrivalTime}" />
+					</else>
+				</if>
+			</sequential>
+		</for>
+		<echo file="${outFile}" append="false">lowfrequent.values=${generated.values}${line.separator}</echo>
+
+		<!-- Time intervals with high transport frequency -->
+		<var name="generated.values" value="" />
+		<for begin="1" end="${properties.dataSets.SF.trafficPeriod.highfrequent(iterations)}" step="1" param="iter">
+			<sequential>
+				<var name="fromTime" value="${arrivalDay}T${properties.dataSets.SF.trafficPeriod.highfrequent(fromTime)}" />
+				<var name="toTime" value="${arrivalDay}T${properties.dataSets.SF.trafficPeriod.highfrequent(toTime)}" />
+				<randomTimeStamp from="${fromTime}" to="${toTime}" pattern="${pattern}" property="arrivalTime" override="true" />
+				<if>
+					<equals arg1="${generated.values}" arg2="" />
+					<then>
+						<var name="generated.values" value="${arrivalTime}" />
+					</then>
+					<else>
+						<var name="generated.values" value="${generated.values},${arrivalTime}" />
+					</else>
+				</if>
+			</sequential>
+		</for>
+		<echo file="${outFile}" append="true">highfrequent.values=${generated.values}${line.separator}</echo>
+
+		<!-- Time intervals with medium transport frequency -->
+		<var name="generated.values" value="" />
+		<for begin="1" end="${properties.dataSets.SF.trafficPeriod.mediumfrequent(iterations)}" step="1" param="iter">
+			<sequential>
+				<var name="fromTime" value="${arrivalDay}T${properties.dataSets.SF.trafficPeriod.mediumfrequent(fromTime)}" />
+				<var name="toTime" value="${arrivalDay}T${properties.dataSets.SF.trafficPeriod.mediumfrequent(toTime)}" />
+				<randomTimeStamp from="${fromTime}" to="${toTime}" pattern="${pattern}" property="arrivalTime" override="true" />
+				<if>
+					<equals arg1="${generated.values}" arg2="" />
+					<then>
+						<var name="generated.values" value="${arrivalTime}" />
+					</then>
+					<else>
+						<var name="generated.values" value="${generated.values},${arrivalTime}" />
+					</else>
+				</if>
+			</sequential>
+		</for>
+		<echo file="${outFile}" append="true">mediumfrequent.values=${generated.values}${line.separator}</echo>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+	          target: generateRandomTimeValuesST                      
+	         - - - - - - - - - - - - - - - - - -->
+	<target name="generateRandomTimeValuesST">
+		<property name="pattern" value="yyyy-MM-dd'T'HH:mm" />
+		<property name="arrivalDay" value="${properties.dataSets.ST.parameters.arrivalDay}" />
+		<property name="outFile" location="${basedir}/in/${properties.dataSets.ST(shortName)}_arrivaltimes.properties" />
+		<var name="fromTime" value="${properties.tests.cycles.lowfrequent(fromTime)}" />
+		<var name="toTime" value="${properties.dataSets.ST.trafficPeriod.lowfrequent(toTime)}" />
+
+
+		<!-- Time intervals with low transport frequency -->
+		<var name="generated.values" value="" />
+		<for begin="1" end="${properties.dataSets.ST.trafficPeriod.lowfrequent(iterations)}" step="1" param="iter">
+			<sequential>
+				<var name="fromTime" value="${arrivalDay}T${properties.dataSets.ST.trafficPeriod.lowfrequent(fromTime)}" />
+				<var name="toTime" value="${arrivalDay}T${properties.dataSets.ST.trafficPeriod.lowfrequent(toTime)}" />
+				<randomTimeStamp from="${fromTime}" to="${toTime}" pattern="${pattern}" property="arrivalTime" override="true" />
+				<if>
+					<equals arg1="${generated.values}" arg2="" />
+					<then>
+						<var name="generated.values" value="${arrivalTime}" />
+					</then>
+					<else>
+						<var name="generated.values" value="${generated.values},${arrivalTime}" />
+					</else>
+				</if>
+			</sequential>
+		</for>
+		<echo file="${outFile}" append="false">lowfrequent.values=${generated.values}${line.separator}</echo>
+
+		<!-- Time intervals with high transport frequency -->
+		<var name="generated.values" value="" />
+		<for begin="1" end="${properties.dataSets.ST.trafficPeriod.highfrequent(iterations)}" step="1" param="iter">
+			<sequential>
+				<var name="fromTime" value="${arrivalDay}T${properties.dataSets.ST.trafficPeriod.highfrequent(fromTime)}" />
+				<var name="toTime" value="${arrivalDay}T${properties.dataSets.ST.trafficPeriod.highfrequent(toTime)}" />
+				<randomTimeStamp from="${fromTime}" to="${toTime}" pattern="${pattern}" property="arrivalTime" override="true" />
+				<if>
+					<equals arg1="${generated.values}" arg2="" />
+					<then>
+						<var name="generated.values" value="${arrivalTime}" />
+					</then>
+					<else>
+						<var name="generated.values" value="${generated.values},${arrivalTime}" />
+					</else>
+				</if>
+			</sequential>
+		</for>
+		<echo file="${outFile}" append="true">highfrequent.values=${generated.values}${line.separator}</echo>
+
+		<!-- Time intervals with medium transport frequency -->
+		<var name="generated.values" value="" />
+		<for begin="1" end="${properties.dataSets.ST.trafficPeriod.mediumfrequent(iterations)}" step="1" param="iter">
+			<sequential>
+				<var name="fromTime" value="${arrivalDay}T${properties.dataSets.ST.trafficPeriod.mediumfrequent(fromTime)}" />
+				<var name="toTime" value="${arrivalDay}T${properties.dataSets.ST.trafficPeriod.mediumfrequent(toTime)}" />
+				<randomTimeStamp from="${fromTime}" to="${toTime}" pattern="${pattern}" property="arrivalTime" override="true" />
+				<if>
+					<equals arg1="${generated.values}" arg2="" />
+					<then>
+						<var name="generated.values" value="${arrivalTime}" />
+					</then>
+					<else>
+						<var name="generated.values" value="${generated.values},${arrivalTime}" />
+					</else>
+				</if>
+			</sequential>
+		</for>
+		<echo file="${outFile}" append="true">mediumfrequent.values=${generated.values}${line.separator}</echo>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+	          target: generateRandomTimeValuesIT                      
+	         - - - - - - - - - - - - - - - - - -->
+	<target name="generateRandomTimeValuesIT">
+		<property name="pattern" value="yyyy-MM-dd'T'HH:mm" />
+		<property name="arrivalDay" value="${properties.dataSets.IT.parameters.arrivalDay}" />
+		<property name="outFile" location="${basedir}/in/${properties.dataSets.IT(shortName)}_arrivaltimes.properties" />
+		<var name="fromTime" value="${properties.tests.cycles.lowfrequent(fromTime)}" />
+		<var name="toTime" value="${properties.dataSets.IT.trafficPeriod.lowfrequent(toTime)}" />
+
+
+		<!-- Time intervals with low transport frequency -->
+		<var name="generated.values" value="" />
+		<for begin="1" end="${properties.dataSets.IT.trafficPeriod.lowfrequent(iterations)}" step="1" param="iter">
+			<sequential>
+				<var name="fromTime" value="${arrivalDay}T${properties.dataSets.IT.trafficPeriod.lowfrequent(fromTime)}" />
+				<var name="toTime" value="${arrivalDay}T${properties.dataSets.IT.trafficPeriod.lowfrequent(toTime)}" />
+				<randomTimeStamp from="${fromTime}" to="${toTime}" pattern="${pattern}" property="arrivalTime" override="true" />
+				<if>
+					<equals arg1="${generated.values}" arg2="" />
+					<then>
+						<var name="generated.values" value="${arrivalTime}" />
+					</then>
+					<else>
+						<var name="generated.values" value="${generated.values},${arrivalTime}" />
+					</else>
+				</if>
+			</sequential>
+		</for>
+		<echo file="${outFile}" append="false">lowfrequent.values=${generated.values}${line.separator}</echo>
+
+		<!-- Time intervals with high transport frequency -->
+		<var name="generated.values" value="" />
+		<for begin="1" end="${properties.dataSets.IT.trafficPeriod.highfrequent(iterations)}" step="1" param="iter">
+			<sequential>
+				<var name="fromTime" value="${arrivalDay}T${properties.dataSets.IT.trafficPeriod.highfrequent(fromTime)}" />
+				<var name="toTime" value="${arrivalDay}T${properties.dataSets.IT.trafficPeriod.highfrequent(toTime)}" />
+				<randomTimeStamp from="${fromTime}" to="${toTime}" pattern="${pattern}" property="arrivalTime" override="true" />
+				<if>
+					<equals arg1="${generated.values}" arg2="" />
+					<then>
+						<var name="generated.values" value="${arrivalTime}" />
+					</then>
+					<else>
+						<var name="generated.values" value="${generated.values},${arrivalTime}" />
+					</else>
+				</if>
+			</sequential>
+		</for>
+		<echo file="${outFile}" append="true">highfrequent.values=${generated.values}${line.separator}</echo>
+
+		<!-- Time intervals with medium transport frequency -->
+		<var name="generated.values" value="" />
+		<for begin="1" end="${properties.dataSets.IT.trafficPeriod.mediumfrequent(iterations)}" step="1" param="iter">
+			<sequential>
+				<var name="fromTime" value="${arrivalDay}T${properties.dataSets.IT.trafficPeriod.mediumfrequent(fromTime)}" />
+				<var name="toTime" value="${arrivalDay}T${properties.dataSets.IT.trafficPeriod.mediumfrequent(toTime)}" />
+				<randomTimeStamp from="${fromTime}" to="${toTime}" pattern="${pattern}" property="arrivalTime" override="true" />
+				<if>
+					<equals arg1="${generated.values}" arg2="" />
+					<then>
+						<var name="generated.values" value="${arrivalTime}" />
+					</then>
+					<else>
+						<var name="generated.values" value="${generated.values},${arrivalTime}" />
+					</else>
+				</if>
+			</sequential>
+		</for>
+		<echo file="${outFile}" append="true">mediumfrequent.values=${generated.values}${line.separator}</echo>
+	</target>
+
+
+	<target name="test">
+		<loadproperties srcFile="${basedir}/ant/arrivaltimes.properties" />
+		<echo message="Property: ${it.mediumfrequent.values}" />
+	</target>
+
+
+	<!-- ================================= 
+          target: computeAllBreakevenPoints              
+         ================================= -->
+	<target name="computeAllBreakevenPoints" description="description">
+		<delete>
+			<fileset dir="${basedir}/out/breakeven">
+				<include name="*_BEPt.csv" />
+			</fileset>
+		</delete>
+
+		<foreach list="${properties.project.algorithm(name)}" target="computeBreakevenPointss" param="algorithmName" delimiter=",">
+			<param name="column.index" value="2" />
+		</foreach>
+	</target>
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: computeBreakevenPointss                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="computeBreakevenPointss" description="Computes the break even point ">
+		<property name="algorithmName" value="${properties.project.algorithm(name)}" />
+		<property name="column.index" value="3" />
+
+		<for list="${properties.dataSets.BZ(shortName)},${properties.dataSets.SF(shortName)},${properties.dataSets.ST(shortName)},${properties.dataSets.IT(shortName)}" param="dSet" delimiter=",">
+			<sequential>
+				<echo message="@{dSet}">
+				</echo>
+				<switch value="@{dSet}">
+					<case value="${properties.dataSets.BZ(shortName)}">
+						<var name="qPoint" value="${properties.dataSets.BZ.parameters.poi.central.nodeOfInterests}" />
+						<var name="arrival.time" value="${properties.dataSets.BZ.parameters.arrivalTime}" />
+					</case>
+					<case value="${properties.dataSets.SF(shortName)}">
+						<var name="qPoint" value="${properties.dataSets.SF.parameters.poi.central.nodeOfInterests}" />
+						<var name="arrival.time" value="${properties.dataSets.SF.parameters.arrivalTime}" />
+					</case>
+					<case value="${properties.dataSets.ST(shortName)}">
+						<var name="qPoint" value="${properties.dataSets.ST.parameters.poi.central.nodeOfInterests}" />
+						<var name="arrival.time" value="${properties.dataSets.ST.parameters.arrivalTime}" />
+					</case>
+					<case value="${properties.dataSets.IT(shortName)}">
+						<var name="qPoint" value="${properties.dataSets.IT.parameters.poi.central.nodeOfInterests}" />
+						<var name="arrival.time" value="${properties.dataSets.IT.parameters.arrivalTime}" />
+					</case>
+				</switch>
+				<echo>In file ${algorithmName}: ${algorithmName}_@{dSet}_MULTIMODAL_${qPoint}_${arrival.time}_runtime_size_avg.csv</echo>
+				<echo>In file MDijkstra: ${mdijkstra.basedir}/out/MDijkstra_@{dSet}_MULTIMODAL_${qPoint}_${arrival.time}_runtime_size_avg.csv</echo>
+
+				<antcall target="computeBreakevenPoints">
+					<param name="dataset" value="@{dSet}" />
+					<param name="algorithm.name" value="${algorithmName}" />
+					<param name="dijkstra.file" value="${mdijkstra.basedir}/out/MDijkstra_@{dSet}_MULTIMODAL_${qPoint}_${arrival.time}_runtime_size_avg.csv" />
+					<param name="infile.pattern" value="${algorithmName}_@{dSet}_MULTIMODAL_${qPoint}_${arrival.time}_runtime_size_avg.csv" />
+				</antcall>
+			</sequential>
+		</for>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: computeBreakevenPoints                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="computeBreakevenPoints">
+		<property name="dataset" value="setMe" />
+		<property name="algorithm.name" value="setMe" />
+		<property name="dijkstra.file" value="setMe" />
+		<property name="infile.pattern" value="setMe" />
+
+		<echo message="Pattern: ${infile.pattern}" />
+
+		<!--fileset id="inFileSet" dir="${basedir}/out" includes="${algorithm.name}_${dataset}_**_DL*.csv" /-->
+		<fileset id="inFileSet" dir="${basedir}/out" includes="${infile.pattern}" />
+		<property name="in.files" refid="inFileSet" />
+		<for list="${in.files}" delimiter=";" param="infile">
+			<sequential>
+				<antcall target="computeBreakEvenPoint">
+					<param name="dijkstra.file" value="${dijkstra.file}" />
+					<param name="in.file" value="@{infile}" />
+					<param name="in.dir" value="${basedir}/out" />
+					<param name="out.dir" value="${basedir}/out/breakeven" />
+				</antcall>
+			</sequential>
+		</for>
+	</target>
+
+
+	<!-- ================================= 
+          target: mergeAll              
+         ================================= -->
+	<target name="mergeAll" description="description">
+		<property name="datasets" value="${properties.dataSets.BZ(shortName)};${properties.dataSets.SF(shortName)};${properties.dataSets.ST(shortName)};${properties.dataSets.IT(shortName)}" />
+		<for list="${datasets}" param="dset" delimiter=";">
+			<sequential>
+				<var name="qpoint" value="" />
+				<switch value="@{dset}">
+					<case value="${properties.dataSets.BZ(shortName)}">
+						<var name="qpoint" value="${properties.dataSets.BZ.parameters.poi.central.nodeOfInterests}" />
+					</case>
+					<case value="${properties.dataSets.SF(shortName)}">
+						<var name="qpoint" value="${properties.dataSets.SF.parameters.poi.central.nodeOfInterests}" />
+					</case>
+					<case value="${properties.dataSets.ST(shortName)}">
+						<var name="qpoint" value="${properties.dataSets.ST.parameters.poi.central.nodeOfInterests}" />
+					</case>
+					<case value="${properties.dataSets.IT(shortName)}">
+						<var name="qpoint" value="${properties.dataSets.IT.parameters.poi.central.nodeOfInterests}" />
+					</case>
+				</switch>
+				<for list="lowfrequent;highfrequent;mediumfrequent" param="dayInterval" delimiter=";">
+					<sequential>
+						<property name="algorithms" value="${properties.project.algorithm(name)}" />
+						<foreach list="${algorithms}" param="algorithmName" delimiter=";" target="mergeFiles">
+							<param name="dset" value="@{dset}" />
+							<param name="qpoint" value="${qpoint}" />
+							<param name="out.dir" value="${basedir}/out/@{dayInterval}" />
+						</foreach>
+					</sequential>
+				</for>
+			</sequential>
+		</for>
+	</target>
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+	          target: executeHistorgramSQL                      
+	         - - - - - - - - - - - - - - - - - -->
+	<target name="executeHistogramSQL">
+		<property name="out.dir" location="${basedir}/out/histograms" />
+		<mkdir dir="${out.dir}" />
+		<property name="datasets" value="${properties.dataSets.BZ(shortName)};${properties.dataSets.SF(shortName)};${properties.dataSets.ST(shortName)};${properties.dataSets.IT(shortName)}" />
+		<for list="${datasets}" param="dset" delimiter=";">
+			<sequential>
+				<switch value="@{dset}">
+					<case value="${properties.dataSets.BZ(shortName)}">
+						<var name="arrivalday" value="${properties.dataSets.BZ.parameters.arrivalDay}" />
+						<var name="timestamp" value="${properties.dataSets.BZ.parameters.dbDay} 00:00:00" />
+						<var name="weekday" value="${properties.dataSets.BZ.parameters.weekDay}" />
+					</case>
+					<case value="${properties.dataSets.SF(shortName)}">
+						<var name="arrivalday" value="${properties.dataSets.SF.parameters.arrivalDay}" />
+						<var name="timestamp" value="${properties.dataSets.SF.parameters.dbDay} 00:00:00" />
+						<var name="weekday" value="${properties.dataSets.SF.parameters.weekDay}" />
+					</case>
+					<case value="${properties.dataSets.ST(shortName)}">
+						<var name="arrivalday" value="${properties.dataSets.ST.parameters.arrivalDay}" />
+						<var name="timestamp" value="${properties.dataSets.ST.parameters.dbDay} 00:00:00" />
+						<var name="weekday" value="${properties.dataSets.ST.parameters.weekDay}" />
+					</case>
+					<case value="${properties.dataSets.IT(shortName)}">
+						<var name="arrivalday" value="${properties.dataSets.IT.parameters.arrivalDay}" />
+						<var name="timestamp" value="${properties.dataSets.IT.parameters.dbDay} 00:00:00" />
+						<var name="weekday" value="${properties.dataSets.IT.parameters.weekDay}" />
+					</case>
+				</switch>
+				<var name="out.file" value="@{dset}_histogram.csv" />
+				<delete file="${out.dir}/${out.file}" />
+				<for begin="0" end="32" param="increment" step="1">
+					<sequential>
+						<antcall target="makeScheduleHistogram">
+							<param name="schedule.table" value="@{dset}_SCHEDULES" />
+							<param name="daymarker.table" value="@{dset}_CALENDAR" />
+							<param name="arrivalday" value="${arrivalday}" />
+							<param name="weekday" value="${weekday}" />
+							<param name="timestamp" value="${timestamp}" />
+							<param name="step" value="@{increment}" />
+							<param name="outfile" value="${out.dir}/${out.file}" />
+						</antcall>
+					</sequential>
+				</for>
+			</sequential>
+		</for>
+	</target>
+
+
+
+	<!-- ================================= 
+          target: makeScheduleHistogram              
+         ================================= -->
+	<target name="makeScheduleHistogram" description="description">
+		<!-- Override me!! -->
+		<property name="schedule.table" value="setMe" />
+		<property name="daymarker.table" value="setMe" />
+		<property name="arrivalday" value="setMe" />
+		<property name="weekday" value="setMe" />
+		<property name="timestamp" value="setMe" />
+
+		<property name="outfile" value="out.csv" />
+		<property name="step" value="0" />
+		<property name="sql.file" location="tmp.sql" />
+		<property name="tmp.file" location="tmp.txt" />
+
+		<property name="driver" value="org.postgresql.Driver" />
+		<property name="hostname" value="localhost" />
+		<property name="database" value="iso2" />
+		<property name="port" value="5432" />
+		<property name="url" value="jdbc:postgresql://${hostname}:${port}/${database}" />
+		<property name="username" value="postgres" />
+		<property name="password" value="postgres" />
+
+		<math result="to" operand1="${step}" operation="+" operand2="1" datatype="int" />
+		<!--echo>from: ${step}  to:${to} </echo-->
+
+		<copy file="./ant/histogram.sql" tofile="${sql.file}" overwrite="true">
+			<filterchain>
+				<replacetokens>
+					<token key="SCHEDULE_TABLE" value="${schedule.table}" />
+					<token key="DAYMARKER_TABLE" value="${daymarker.table}" />
+					<token key="ARRIVAL_DAY" value="${arrivalday}" />
+					<token key="ARRIVAL_DAY_PATTERN" value="YYYY-MM-DD" />
+					<token key="WEEK_DAY" value="${weekday}" />
+					<token key="TIMESTAMP" value="${timestamp}" />
+					<token key="TIMESTAMP_PATTERN" value="YYYY-MM-DD HH24:MI:ss" />
+					<token key="FROM_INC" value="${step}" />
+					<token key="TO_INC" value="${to}" />
+				</replacetokens>
+			</filterchain>
+		</copy>
+		<!--
+		<loadfile property="sqlFile" srcFile="${sql.file}" />
+		<echo>${sqlFile}</echo>
+-->
+
+		<property name="tmp.file" location="tmp.txt" />
+		<sql driver="${driver}" url="${url}" userid="${username}" password="${password}" src="${sql.file}" print="yes" output="${tmp.file}" showheaders="false" showtrailers="false">
+			<classpath>
+				<pathelement location="${properties.project.libextDir}/postgresql-8.4-702.jdbc4.jar" />
+			</classpath>
+		</sql>
+
+		<loadfile property="result" srcfile="${tmp.file}">
+			<filterchain>
+				<headfilter lines="1" />
+			</filterchain>
+		</loadfile>
+
+		<!--echo message="step: ${to} results: ${result}" /-->
+
+		<concat destfile="${outfile}" append="true">${to} ${result}</concat>
+
+		<delete file="${sql.file}" />
+		<delete file="${tmp.file}" />
+	</target>
+
+	<!-- ================================= 
+          target: extractAllLocations              
+         ================================= -->
+	<target name="extractAllLocations" description="description">
+
+		<property name="out.file" location="${basedir}/in/querypoints.properties" />
+		<delete file="${out.file}" />
+
+		<for list="${properties.dataSets.BZ(shortName)};${properties.dataSets.SF(shortName)};${properties.dataSets.ST(shortName)};" param="dset" delimiter=";">
+			<sequential>
+				<var name="out.file" value="${basedir}/in/@{dset}_querypoints.properties" />
+				<delete file="${out.file}" />
+				<foreach list="rndm_center_q;rndm_perif_q" param="suffix" delimiter=";" target="extractLocations">
+					<param name="outfile" value="${out.file}" />
+					<param name="dataset" value="@{dset}" />
+				</foreach>
+			</sequential>
+		</for>
+		<!--
+    	<foreach list="${tables}" param="tableName" delimiter=";" target="extractLocations"> 
+    		<param name="outfile" value="${out.file}"/>
+    	</foreach>
+        -->
+	</target>
+
+
+
+	<!-- ================================= 
+	          target: extractLocations              
+	         ================================= -->
+	<target name="extractLocations" description="description">
+		<!-- Override me!! -->
+		<property name="dataset" value="${properties.dataSets.BZ(shortName)}" />
+		<property name="suffix" value="rndm_center_q" />
+		<property name="tableName" value="${dataset}_${suffix}" />
+
+		<property name="outfile" value="out.csv" />
+		<property name="step" value="0" />
+		<property name="sql.file" location="tmp.sql" />
+		<property name="tmp.file" location="tmp.txt" />
+
+		<property name="driver" value="org.postgresql.Driver" />
+		<property name="hostname" value="localhost" />
+		<property name="database" value="iso2" />
+		<property name="port" value="5432" />
+		<property name="url" value="jdbc:postgresql://${hostname}:${port}/${database}" />
+		<property name="username" value="postgres" />
+		<property name="password" value="postgres" />
+
+		<math result="to" operand1="${step}" operation="+" operand2="1" datatype="int" />
+		<!--echo>from: ${step}  to:${to} </echo-->
+
+		<copy file="./ant/extract_locations.sql" tofile="${sql.file}" overwrite="true">
+			<filterchain>
+				<replacetokens>
+					<token key="TABLE_NAME" value="${tableName}" />
+				</replacetokens>
+			</filterchain>
+		</copy>
+		<!--
+			<loadfile property="sqlFile" srcFile="${sql.file}" />
+			<echo>${sqlFile}</echo>
+	-->
+
+		<property name="tmp.file" location="tmp.txt" />
+		<sql driver="${driver}" url="${url}" userid="${username}" password="${password}" src="${sql.file}" print="yes" output="${tmp.file}" showheaders="false" showtrailers="false">
+			<classpath>
+				<pathelement location="${properties.project.libextDir}/postgresql-8.4-702.jdbc4.jar" />
+			</classpath>
+		</sql>
+
+		<loadfile property="result" srcfile="${tmp.file}">
+			<!--filterchain>
+					<headfilter lines="1" />
+				</filterchain-->
+		</loadfile>
+
+		<var name="q.values" value="" />
+
+		<for list="${result}" delimiter="${line.separator}" param="res">
+			<sequential>
+				<if>
+					<equals arg1="${q.values}" arg2="" />
+					<then>
+						<var name="q.values" value="${suffix}=@{res}" />
+					</then>
+					<else>
+						<var name="q.values" value="${q.values};@{res}" />
+					</else>
+				</if>
+			</sequential>
+		</for>
+		<echo message="${q.values}" />
+		<concat destfile="${outfile}" append="true">${q.values}${line.separator}</concat>
+
+		<delete file="${sql.file}" />
+		<delete file="${tmp.file}" />
+	</target>
+
+
+	<target name="runtimeSizeExperimentsDetailed_MM">
+		<antcall target="runtimeSizeTestBZ">
+			<param name="mode" value="UNIMODAL" />
+			<param name="sizeCheckPoints" value="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,30,35,40,45,50" />
+			<param name="durationCheckPoints" value="1,1,2,2,2,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,5,5,5,6,6,6" />
+			<param name="frequency" value="50" />
+		</antcall>
+
+		<antcall target="runtimeSizeTestSF">
+			<param name="mode" value="UNIMODAL" />
+			<param name="sizeCheckPoints" value="2,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,30,35,40,45,50" />
+			<param name="durationCheckPoints" value="1,2,3,3,4,4,5,5,5,5,5,5,5,5,5,5,5,5,6,6,6,7,7,8,8,9" />
+			<param name="frequency" value="50" />
+		</antcall>
+
+		<antcall target="runtimeSizeTestST">
+			<param name="mode" value="UNIMODAL" />
+			<param name="sizeCheckPoints" value="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,30,35,40,45,50" />
+			<param name="durationCheckPoints" value="1,1,2,2,2,3,3,3,3,4,4,4,4,4,4,4,5,5,5,5,6,6,7,7,7,8" />
+			<param name="frequency" value="50" />
+		</antcall>
+
+		<antcall target="runtimeSizeTestIT">
+			<param name="mode" value="UNIMODAL" />
+			<param name="sizeCheckPoints" value="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,30,35,40,45,50" />
+			<param name="durationCheckPoints" value="2,2,2,2,2,2,3,3,3,3,3,4,4,4,4,4,4,4,4,5,5,6,8,8,9,10" />
+			<param name="frequency" value="50" />
+		</antcall>
+
+	</target>
+
+	<!-- ================================= 
+          target: generateVertexDensities_All              
+         ================================= -->
+	
+	<target name="generateDensities_All" depends="generateDensities_BZ,generateDensities_SF,generateDensities_ST,generateDensities_IT" />
+
+	<target name="generateVertexDensities_BZ">
+			<antcall target="generateVertexDensities">
+				<param name="vertex.table" value="bz_nodes" />
+				<param name="density.table" value="bz_test_density2" />
+				<param name="sizePoints" value="500,1000,1500,2000,2500" />
+				<param name="maxRange" value="20000" />
+				<param name="percentage" value="5" />
+				<param name="db.host" value="localhost" />
+				<param name="db.name" value="iso2" />
+				<param name="db.port" value="5432" />
+				<param name="db.user" value="postgres" />
+				<param name="db.passwd" value="AifaXub2" />
+			</antcall>
+		</target>
+
+	<target name="generateDensities_BZ">
+			<antcall target="generateDensities">
+				<param name="vertex.table" value="bz_nodes" />
+				<param name="density.table" value="bz_density" />
+				<param name="sizePoints" value="500,1000,1500,2000,2500" />
+				<param name="db.host" value="localhost" />
+				<param name="db.name" value="iso2" />
+				<param name="db.port" value="5432" />
+				<param name="db.user" value="postgres" />
+				<param name="db.passwd" value="AifaXub2" />
+			</antcall>
+		</target>
+	
+	<target name="generateDensities_SF">
+			<antcall target="generateDensities">
+				<param name="vertex.table" value="sf_nodes" />
+				<param name="density.table" value="sf_density" />
+				<param name="sizePoints" value="500,1000,1500,2000,2500,3000,3500,4000,4500,5000" />
+				<param name="db.host" value="localhost" />
+				<param name="db.name" value="iso2" />
+				<param name="db.port" value="5432" />
+				<param name="db.user" value="postgres" />
+				<param name="db.passwd" value="AifaXub2" />
+			</antcall>
+		</target>
+	
+	<target name="generateDensities_ST">
+		<antcall target="generateDensities">
+			<param name="vertex.table" value="st_nodes" />
+			<param name="density.table" value="st_density" />
+			<param name="sizePoints" value="500,1000,1500,2000,2500,3000,3500,4000,4500,5000,5500,6000,6500,7000,8500,9000,9500,10000" />
+			<param name="db.host" value="localhost" />
+			<param name="db.name" value="iso2" />
+			<param name="db.port" value="5432" />
+			<param name="db.user" value="postgres" />
+			<param name="db.passwd" value="AifaXub2" />
+		</antcall>
+	</target>
+
+	<target name="generateDensities_IT">
+		<antcall target="generateDensities">
+			<param name="vertex.table" value="it_nodes" />
+			<param name="density.table" value="it_density" />
+			<param name="sizePoints" value="500,1000,1500,2000,2500,3000,3500,4000,4500,5000,5500,6000,6500,7000,8500,9000,9500,10000" />
+			<param name="db.host" value="localhost" />
+			<param name="db.name" value="iso2" />
+			<param name="db.port" value="5432" />
+			<param name="db.user" value="postgres" />
+			<param name="db.passwd" value="AifaXub2" />
+		</antcall>
+	</target>
+
+</project>
