@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<properties>
+	<project>
+		<name>isoCommon</name>
+		<srcDir>src/main/java</srcDir>
+		<classDir>classes</classDir>
+		<libext>libext</libext>
+		<lib>lib</lib>
+		<jarName>commons.jar</jarName>
+		<branch>staging</branch>
+	</project>
+	<referencedProjects>
+		<MDijkstra>
+			<destinationDir>../MDijkstra_trunk
+			</destinationDir>
+		</MDijkstra>
+		<Mine>
+			<destinationDir>../Mine_trunk
+			</destinationDir>
+		</Mine>
+		<MineX>
+			<destinationDir>../MineX_trunk
+			</destinationDir>
+		</MineX>
+		<MierWine>
+			<destinationDir>../MrneX_trunk
+			</destinationDir>
+		</MierWine>
+		<Mier>
+			<destinationDir>../../Mier/${properties.project.branch}
+			</destinationDir>
+		</Mier>
+		<Mpgr>
+			<destinationDir>../../Mpgr/${properties.project.branch}
+			</destinationDir>
+		</Mpgr>
+	</referencedProjects>
+</properties>

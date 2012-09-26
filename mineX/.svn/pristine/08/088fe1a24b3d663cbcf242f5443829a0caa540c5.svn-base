@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<properties>
+	<!-- Database network tables -->
+	<entry key="tbl.nodes">bz_nodes</entry>
+	<entry key="tbl.links">bz_edges</entry>
+	<entry key="tbl.times">bz_schedules</entry>
+	<entry key="tbl.dateCodes">bz_calendar</entry>
+	<!-- Database result tables -->
+	<entry key="tbl.isoLinks">bz_minex_rwb</entry>
+	<entry key="idx.isoLinks">bz_minex_rwb_sidx</entry>
+	<entry key="tbl.isoNodes">bz_minex_rwb</entry>
+	<entry key="idx.isoNodes">bz_minex_rwb_sidx</entry>
+	<!-- Spatial settings -->
+	<entry key="sql.spatial.dim1.el">MDSYS.SDO_DIM_ELEMENT('X',676836.212695921,680931.673598252,0.001)</entry>
+	<entry key="sql.spatial.dim2.el">MDSYS.SDO_DIM_ELEMENT('Y', 5148549.05591258,5152597.63201377,0.001)</entry>
+	<entry key="sql.spatial.srid">82344</entry>
+</properties>

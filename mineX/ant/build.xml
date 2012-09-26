@@ -1,0 +1,1039 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="info" basedir="../">
+	<xmlproperty file="./ant/properties.xml" />
+	<!--xmlproperty file="./ant/properties.xml" semanticattributes="true" includesemanticattribute="true" /-->
+
+	<!--import>
+    <javaresource name="common.xml">
+      <classpath location="${properties.project.libDir}/bineBase.jar"/>
+    </javaresource>
+  </import
+	works only with ant version 1.8 or later
+	-->
+	<import file="${basedir}/${properties.project.libDir}/commons.xml" />
+
+	<property name="mdijkstra.basedir" location="../../MDijkstra/trunk" />
+	<property name="mdijkstra.algorithm" value="MDijkstra" />
+
+	<target name="info">
+		<echo>ant setup  --> ##### Algorithm ${properties.project.name}: available tasks #####</echo>
+		<antcall target="commonInfo" />
+		<echo>ant runConfidenceIntervalExperiments --> runs confidence interval tests for cities Bozen, San Francisco,DC (does not write results in DB)</echo>
+		<echo>ant runConfidenceIntervalExperimentsBZ --> runs confidence interval tests for city Bozen (does not write results in DB)</echo>
+		<echo>ant runConfidenceIntervalExperimentsSF --> runs confidence interval tests for city San Francisco (does not write results in DB)</echo>
+		<echo>ant runConfidenceIntervalExperimentsST --> runs confidence interval tests for South Tyrol (does not write results in DB)</echo>
+		<echo>ant runConfidenceIntervalExperimentsDC --> runs confidence interval tests for Washington DC (does not write results in DB)</echo>
+	</target>
+
+	<target name="reachabilityTest">
+		<!-- default parameters, can be overwritten -->
+		<property name="dataset" value="${properties.dataSets.BZ(shortName)}" />
+		<property name="name" value="${properties.dataSets.BZ(name)}" />
+		<property name="lOI" value="${properties.dataSets.BZ.parameters.poi.central.locationOfInterests}" />
+		<property name="startTargetTime" value="${properties.dataSets.BZ.startTargetTime}" />
+		<property name="endTargetTime" value="${properties.dataSets.BZ.endTargetTime}" />
+		<property name="dMax" value="${properties.dataSets.BZ.parameters.dMax}" />
+
+		<!-- overide only in some special cases -->
+		<property name="mode" value="${properties.tests.reachabilityTest.mode}" />
+
+		<echo message="Starting the reachability tests for isochrones for ${name}" />
+		<java classname="${properties.tests.reachabilityTest(className)}" classpathref="path.libraries" fork="true">
+			<arg value="algorithm=${properties.project.name}" />
+			<arg value="dataset=${dataset}" />
+			<arg value="lOI=${lOI}" />
+			<arg value="oOI=${oOI}" />
+			<arg value="dMax=${dMax}" />
+			<arg value="startTargetTime=${startTargetTime}" />
+			<arg value="endTargetTime=${endTargetTime}" />
+			<arg value="speed=${properties.tests.reachabilityTest.speed}" />
+			<arg value="mode=${mode}" />
+			<arg value="outputWriting=${properties.tests.reachabilityTest.outputWriting}" />
+			<arg value="optimization=${properties.tests.reachabilityTest.optimization}" />
+		</java>
+	</target>
+
+	<target name="runReachabilityExperiments" description="description" depends="runReachabilityTestBZ,runReachabilityTestSF,runReachabilityTestDC" />
+
+	<target name="runReachabilityTestBZ" description="description">
+		<antcall target="reachabilityTest" />
+	</target>
+
+	<target name="runReachabilityTestSF" description="description">
+		<antcall target="reachabilityTest">
+			<param name="dataset" value="${properties.dataSets.SF(shortName)}" />
+			<param name="name" value="${properties.dataSets.SF(name)}" />
+			<param name="lOI" value="${properties.dataSets.SF.parameters.poi.central.locationOfInterests}" />
+			<param name="startTargetTime" value="${properties.dataSets.SF.startTargetTime}" />
+			<param name="endTargetTime" value="${properties.dataSets.SF.endTargetTime}" />
+			<param name="dMax" value="${properties.dataSets.SF.parameters.dMax}" />
+			<param name="snapSize" value="${properties.dataSets.SF.snapSize(multimodal)}" />
+		</antcall>
+	</target>
+
+
+	<target name="runReachabilityTestDC" description="description">
+		<antcall target="reachabilityTest">
+			<param name="dataset" value="${properties.dataSets.DC(shortName)}" />
+			<param name="name" value="${properties.dataSets.DC(name)}" />
+			<param name="lOI" value="${properties.dataSets.DC.parameters.poi.central.locationOfInterests}" />
+			<param name="targetTimes" value="${properties.dataSets.DC.tArrivals}" />
+			<param name="dMax" value="${properties.dataSets.DC.parameters.dMax}" />
+			<param name="snapSize" value="${properties.dataSets.DC.snapSize(multimodal)}" />
+		</antcall>
+	</target>
+
+	<!-- ================================= 
+          target: runmemorySizeTestGrid              
+         ================================= -->
+	<target name="runMemorySizeTestGrid" description="description">
+		<property name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests(innest)}" />
+		<antcall target="_memorySizeTest">
+			<param name="dataset" value="${properties.dataSets.GRID(shortName)}" />
+			<param name="name" value="${properties.dataSets.GRID(name)}" />
+			<param name="lOI" value="${lOI}" />
+			<param name="oOI" value="${oOI}" />
+			<param name="targetTime" value="${properties.dataSets.GRID.parameters.tArrival}" />
+			<param name="dMax" value="${properties.dataSets.GRID.parameters.dMax}" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="outputWriting" value="false" />
+			<param name="snapSize" value="${properties.dataSets.GRID.snapSize(unimodal)}" />
+			<param name="speed" value="1.0" />
+		</antcall>
+	</target>
+
+	<target name="runMemorySizeTestGridHalfOutest" description="description">
+		<antcall target="runMemorySizeTestGrid">
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests(halfOutest)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemorySizeTestGridOutest" description="description">
+		<antcall target="runMemorySizeTestGrid">
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests(outest)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemorySizeTestGridLevel">
+		<antcall target="runMemorySizeTestGridLevel0" />
+		<antcall target="runMemorySizeTestGridLevel15" />
+		<antcall target="runMemorySizeTestGridLevel30" />
+		<antcall target="runMemorySizeTestGridLevel45" />
+		<antcall target="runMemorySizeTestGridLevel60" />
+	</target>
+
+	<target name="runMemorySizeTestGridLevel0" description="description">
+		<antcall target="runMemorySizeTestGrid">
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.level_0(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemorySizeTestGridLevel10" description="description">
+		<antcall target="runMemorySizeTestGrid">
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.level_10(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemorySizeTestGridLevel15" description="description">
+		<antcall target="runMemorySizeTestGrid">
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.level_15(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemorySizeTestGridLevel20" description="description">
+		<antcall target="runMemorySizeTestGrid">
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.level_20(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemorySizeTestGridLevel30" description="description">
+		<antcall target="runMemorySizeTestGrid">
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.level_30(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemorySizeTestGridLevel40" description="description">
+		<antcall target="runMemorySizeTestGrid">
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.level_40(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemorySizeTestGridLevel45" description="description">
+		<antcall target="runMemorySizeTestGrid">
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.level_45(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemorySizeTestGridLevel50" description="description">
+		<antcall target="runMemorySizeTestGrid">
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.level_50(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemorySizeTestGridLevel60" description="description">
+		<antcall target="runMemorySizeTestGrid">
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.level_60(link_id)}" />
+		</antcall>
+	</target>
+	<!-- ================================= 
+	          target: runMemoryDurationTestGrid              
+	         ================================= -->
+	<target name="runMemoryDurationTestGrid" description="description">
+		<property name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests(innest)}" />
+		<antcall target="_memoryDurationTest">
+			<param name="dataset" value="${properties.dataSets.GRID(shortName)}" />
+			<param name="name" value="${properties.dataSets.GRID(name)}" />
+			<param name="lOI" value="${lOI}" />
+			<param name="targetTime" value="${properties.dataSets.GRID.parameters.tArrival}" />
+			<param name="dMax" value="${properties.dataSets.GRID.parameters.dMax}" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="speed" value="1.0" />
+			<param name="outputWriting" value="false" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestGridHalfOutest" description="description">
+		<antcall target="runMemoryDurationTestGrid">
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests(halfOutest)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestGridOutest" description="description">
+		<antcall target="runMemoryDurationTestGrid">
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests(outest)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestGridLevel0" description="description">
+		<antcall target="runMemoryDurationTestGrid">
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.level_0(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestGridLevel10" description="description">
+		<antcall target="runMemoryDurationTestGrid">
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.level_10(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestGridLevel15" description="description">
+		<antcall target="runMemoryDurationTestGrid">
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.level_15(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestGridLevel20" description="description">
+		<antcall target="runMemoryDurationTestGrid">
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.level_20(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestGridLevel30" description="description">
+		<antcall target="runMemoryDurationTestGrid">
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.level_30(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestGridLevel40" description="description">
+		<antcall target="runMemoryDurationTestGrid">
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.level_40(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestGridLevel45" description="description">
+		<antcall target="runMemoryDurationTestGrid">
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.level_45(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestGridLevel50" description="description">
+		<antcall target="runMemoryDurationTestGrid">
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.level_50(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestGridLevel60" description="description">
+		<antcall target="runMemoryDurationTestGrid">
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.level_60(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestGridLevel">
+		<antcall target="runMemoryDurationTestGridLevel0" />
+		<antcall target="runMemoryDurationTestGridLevel15" />
+		<antcall target="runMemoryDurationTestGridLevel30" />
+		<antcall target="runMemoryDurationTestGridLevel45" />
+		<antcall target="runMemoryDurationTestGridLevel60" />
+	</target>
+
+	<!-- ================================= 
+	          target: runmemorySizeTestSpider              
+	         ================================= -->
+	<target name="runMemorySizeTestSpider" description="description">
+		<property name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests(innest)}" />
+		<antcall target="_memorySizeTest">
+			<param name="dataset" value="${properties.dataSets.SPIDER(shortName)}" />
+			<param name="name" value="${properties.dataSets.SPIDER(name)}" />
+			<param name="lOI" value="${lOI}" />
+			<param name="targetTime" value="${properties.dataSets.SPIDER.parameters.tArrival}" />
+			<param name="dMax" value="${properties.dataSets.SPIDER.parameters.dMax}" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="outputWriting" value="false" />
+			<param name="snapSize" value="${properties.dataSets.SPIDER.snapSize(unimodal)}" />
+			<param name="speed" value="1.0" />
+		</antcall>
+	</target>
+
+	<target name="runMemorySizeTestSpiderLevel">
+		<antcall target="runMemorySizeTestSpiderLevel0" />
+		<antcall target="runMemorySizeTestSpiderLevel15" />
+		<antcall target="runMemorySizeTestSpiderLevel30" />
+		<antcall target="runMemorySizeTestSpiderLevel45" />
+		<antcall target="runMemorySizeTestSpiderLevel60" />
+	</target>
+
+	<target name="runMemorySizeTestSpiderLevel0" description="description">
+		<antcall target="runMemorySizeTestSpider">
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.level_0(link_id)}" />
+		</antcall>
+	</target>
+
+
+	<target name="runMemorySizeTestSpiderLevel10" description="description">
+		<antcall target="runMemorySizeTestSpider">
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.level_10(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemorySizeTestSpiderLevel15" description="description">
+		<antcall target="runMemorySizeTestSpider">
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.level_15(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemorySizeTestSpiderLevel20" description="description">
+		<antcall target="runMemorySizeTestSpider">
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.level_20(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemorySizeTestSpiderLevel30" description="description">
+		<antcall target="runMemorySizeTestSpider">
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.level_30(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemorySizeTestSpiderLevel40" description="description">
+		<antcall target="runMemorySizeTestSpider">
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.level_40(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemorySizeTestSpiderLevel45" description="description">
+		<antcall target="runMemorySizeTestSpider">
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.level_45(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemorySizeTestSpiderLevel50" description="description">
+		<antcall target="runMemorySizeTestSpider">
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.level_50(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemorySizeTestSpiderLevel60" description="description">
+		<antcall target="runMemorySizeTestSpider">
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.level_60(link_id)}" />
+		</antcall>
+	</target>
+
+
+	<target name="runMemorySizeTestSpiderHalfOutest" description="description">
+		<antcall target="runMemorySizeTestSpider">
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests(halfOutest)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemorySizeTestSpiderOutest" description="description">
+		<antcall target="runMemorySizeTestSpider">
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests(outest)}" />
+		</antcall>
+	</target>
+
+	<!-- ================================= 
+		          target: runMemoryDurationTestSpider              
+		         ================================= -->
+	<target name="runMemoryDurationTestSpider" description="description">
+		<property name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests(innest)}" />
+		<antcall target="_memoryDurationTest">
+			<param name="dataset" value="${properties.dataSets.SPIDER(shortName)}" />
+			<param name="name" value="${properties.dataSets.SPIDER(name)}" />
+			<param name="lOI" value="${lOI}" />
+			<param name="targetTime" value="${properties.dataSets.SPIDER.parameters.tArrival}" />
+			<param name="dMax" value="${properties.dataSets.SPIDER.parameters.dMax}" />
+			<param name="speed" value="1.0" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="outputWriting" value="false" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestSpiderHalfOutest" description="description">
+		<antcall target="runMemoryDurationTestSpider">
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests(halfOutest)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestSpiderOutest" description="description">
+		<antcall target="runMemoryDurationTestSpider">
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests(outest)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestSpiderLevel">
+		<antcall target="runMemoryDurationTestSpiderLevel0" />
+		<antcall target="runMemoryDurationTestSpiderLevel15" />
+		<antcall target="runMemoryDurationTestSpiderLevel30" />
+		<antcall target="runMemoryDurationTestSpiderLevel45" />
+		<antcall target="runMemoryDurationTestSpiderLevel60" />
+	</target>
+
+	<target name="runMemoryDurationTestSpiderLevel0" description="description">
+		<antcall target="runMemoryDurationTestSpider">
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.level_0(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestSpiderLevel10" description="description">
+		<antcall target="runMemoryDurationTestSpider">
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.level_10(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestSpiderLevel15" description="description">
+		<antcall target="runMemoryDurationTestSpider">
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.level_15(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestSpiderLevel20" description="description">
+		<antcall target="runMemoryDurationTestSpider">
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.level_20(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestSpiderLevel30" description="description">
+		<antcall target="runMemoryDurationTestSpider">
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.level_30(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestSpiderLevel40" description="description">
+		<antcall target="runMemoryDurationTestSpider">
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.level_40(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestSpiderLevel45" description="description">
+		<antcall target="runMemoryDurationTestSpider">
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.level_45(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestSpiderLevel50" description="description">
+		<antcall target="runMemoryDurationTestSpider">
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.level_50(link_id)}" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDurationTestSpiderLevel60" description="description">
+		<antcall target="runMemoryDurationTestSpider">
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.level_60(link_id)}" />
+		</antcall>
+	</target>
+
+	<!-- ================================= 
+			          target: runMemoryDurationTestSpider              
+			         ================================= -->
+	<target name="runMemoryDurationTestSpiderDecentral" description="description">
+		<antcall target="_memoryDurationTest">
+			<param name="dataset" value="${properties.dataSets.SPIDER(shortName)}" />
+			<param name="name" value="${properties.dataSets.SPIDER(name)}" />
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.decentral.locationOfInterests}" />
+			<param name="targetTime" value="${properties.dataSets.SPIDER.parameters.tArrival}" />
+			<param name="dMax" value="${properties.dataSets.SPIDER.parameters.dMax}" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="outputWriting" value="false" />
+		</antcall>
+	</target>
+
+	<target name="runConfidenceIntervalExperiments" depends="runConfidenceIntervalExperimentsBZ,runConfidenceIntervalExperimentsSF,runConfidenceIntervalExperimentsDC" />
+
+	<target name="runConfidenceIntervalExperimentsBZ">
+		<antcall target="confidenceIntervalTest" />
+	</target>
+
+	<target name="runConfidenceIntervalExperimentsSF">
+		<antcall target="confidenceIntervalTest">
+			<param name="dataset" value="${properties.dataSets.SF(shortName)}" />
+			<param name="name" value="${properties.dataSets.SF(name)}" />
+			<param name="lOI" value="${properties.dataSets.SF.parameters.poi.central.locationOfInterests}" />
+			<param name="targetTime" value="${properties.dataSets.SF.parameters.tArrival}" />
+			<param name="dMax" value="${properties.dataSets.SF.parameters.dMax}" />
+			<param name="queryPointsTable" value="${properties.dataSets.SF.queryPointsTable}" />
+		</antcall>
+	</target>
+
+	<target name="runConfidenceIntervalExperimentsST">
+		<antcall target="confidenceIntervalTest">
+			<param name="dataset" value="${properties.dataSets.ST(shortName)}" />
+			<param name="name" value="${properties.dataSets.ST(name)}" />
+			<param name="lOI" value="${properties.dataSets.ST.parameters.poi.central.locationOfInterests}" />
+			<param name="targetTime" value="${properties.dataSets.ST.parameters.tArrival}" />
+			<param name="dMax" value="${properties.dataSets.ST.parameters.dMax}" />
+			<param name="queryPointsTable" value="${properties.dataSets.ST.queryPointsTable}" />
+		</antcall>
+	</target>
+
+	<target name="runConfidenceIntervalExperimentsDC">
+		<antcall target="confidenceIntervalTest">
+			<param name="dataset" value="${properties.dataSets.DC(shortName)}" />
+			<param name="name" value="${properties.dataSets.DC(name)}" />
+			<param name="lOI" value="${properties.dataSets.DC.parameters.poi.central.locationOfInterests}" />
+			<param name="targetTime" value="${properties.dataSets.DC.parameters.tArrival}" />
+			<param name="dMax" value="${properties.dataSets.DC.parameters.dMax}" />
+			<param name="queryPointsTable" value="${properties.dataSets.DC.queryPointsTable}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeSizeTestSynthetic">
+		<antcall target="_runtimeSizeTest">
+			<param name="outputFile" value="${properties.project.name}_${dataset}_${network}_${lOI}_runtime_size.dat" />
+		</antcall>
+	</target>
+
+	<target name="runtimeDurationTestSynthetic">
+		<property name="network" value="" />
+		<antcall target="_runtimeDurationTest">
+			<param name="outputFile" value="${properties.project.name}_${dataset}_${network}_${lOI}_runtime_duration.dat" />
+			<param name="network" value="${network}" />
+		</antcall>
+	</target>
+
+
+	<target name="runtimeSizeTestSpider_2K">
+		<antcall target="runtimeSizeTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.SPIDER(shortName)}" />
+			<param name="name" value="${properties.dataSets.SPIDER(name)}" />
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_2K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.SPIDER.parameters.tArrival}" />
+			<param name="dMax" value="2000" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_2K(name)}" />
+		</antcall>
+	</target>
+
+
+	<target name="runtimeDurationTestSpider_2K">
+		<antcall target="runtimeDurationTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.SPIDER(shortName)}" />
+			<param name="name" value="${properties.dataSets.SPIDER(name)}" />
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_2K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.SPIDER.parameters.tArrival}" />
+			<param name="dMax" value="2000" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_2K(name)}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeSizeTestSpider_4K">
+		<antcall target="runtimeSizeTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.SPIDER(shortName)}" />
+			<param name="name" value="${properties.dataSets.SPIDER(name)}" />
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_4K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.SPIDER.parameters.tArrival}" />
+			<param name="dMax" value="2000" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_4K(name)}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeDurationTestSpider_4K">
+		<antcall target="runtimeDurationTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.SPIDER(shortName)}" />
+			<param name="name" value="${properties.dataSets.SPIDER(name)}" />
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_4K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.SPIDER.parameters.tArrival}" />
+			<param name="dMax" value="2000" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_4K(name)}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeSizeTestSpider_6K">
+		<antcall target="runtimeSizeTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.SPIDER(shortName)}" />
+			<param name="name" value="${properties.dataSets.SPIDER(name)}" />
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_6K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.SPIDER.parameters.tArrival}" />
+			<param name="dMax" value="2000" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_6K(name)}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeDurationTestSpider_6K">
+		<antcall target="runtimeDurationTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.SPIDER(shortName)}" />
+			<param name="name" value="${properties.dataSets.SPIDER(name)}" />
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_6K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.SPIDER.parameters.tArrival}" />
+			<param name="dMax" value="2000" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_6K(name)}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeSizeTestSpider_8K">
+		<antcall target="runtimeSizeTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.SPIDER(shortName)}" />
+			<param name="name" value="${properties.dataSets.SPIDER(name)}" />
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_8K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.SPIDER.parameters.tArrival}" />
+			<param name="dMax" value="2000" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_8K(name)}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeDurationTestSpider_8K">
+		<antcall target="runtimeDurationTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.SPIDER(shortName)}" />
+			<param name="name" value="${properties.dataSets.SPIDER(name)}" />
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_8K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.SPIDER.parameters.tArrival}" />
+			<param name="dMax" value="2000" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_8K(name)}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeSizeTestSpider_10K">
+		<antcall target="runtimeSizeTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.SPIDER(shortName)}" />
+			<param name="name" value="${properties.dataSets.SPIDER(name)}" />
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_10K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.SPIDER.parameters.tArrival}" />
+			<param name="dMax" value="2000" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="SYNTH_SPIDER_#V_10000" />
+		</antcall>
+	</target>
+
+	<target name="runtimeDurationTestSpider_10K">
+		<antcall target="runtimeDurationTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.SPIDER(shortName)}" />
+			<param name="name" value="${properties.dataSets.SPIDER(name)}" />
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_10K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.SPIDER.parameters.tArrival}" />
+			<param name="dMax" value="2000" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_10K(name)}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeSizeTestSpider_1000K">
+		<antcall target="runtimeSizeTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.SPIDER(shortName)}" />
+			<param name="name" value="${properties.dataSets.SPIDER(name)}" />
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_1000K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.SPIDER.parameters.tArrival}" />
+			<param name="dMax" value="61" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_1000K(name)}" />
+			<param name="snapSize" value="${properties.dataSets.SPIDER.snapSize(unimodal)}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeDurationTestSpider_1000K">
+		<antcall target="runtimeDurationTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.SPIDER(shortName)}" />
+			<param name="name" value="${properties.dataSets.SPIDER(name)}" />
+			<param name="lOI" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_1000K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.SPIDER.parameters.tArrival}" />
+			<param name="dMax" value="61" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.SPIDER.parameters.poi.central.locationOfInterests.table_1000K(name)}" />
+		</antcall>
+	</target>
+
+
+	<target name="runtimeDurationTestGrid">
+		<antcall target="_runtimeDurationTest">
+			<param name="dataset" value="${properties.dataSets.GRID(shortName)}" />
+			<param name="name" value="${properties.dataSets.GRID(name)}" />
+			<param name="nOI" value="${properties.dataSets.GRID.parameters.poi.central.nodeOfInterests}" />
+			<param name="targetTime" value="${properties.dataSets.GRID.parameters.tArrival}" />
+			<param name="dMax" value="${properties.dataSets.GRID.parameters.dMax}" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="outputWriting" value="false" />
+		</antcall>
+	</target>
+
+
+	<target name="runtimeDurationTestGridDecentral">
+		<antcall target="_runtimeDurationTest">
+			<param name="dataset" value="${properties.dataSets.GRID(shortName)}" />
+			<param name="name" value="${properties.dataSets.GRID(name)}" />
+			<param name="nOI" value="${properties.dataSets.GRID.parameters.poi.decentral.nodeOfInterests}" />
+			<param name="targetTime" value="${properties.dataSets.GRID.parameters.tArrival}" />
+			<param name="dMax" value="${properties.dataSets.GRID.parameters.dMax}" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="outputWriting" value="false" />
+		</antcall>
+	</target>
+
+	<target name="runtimeSizeTestGrid_2K">
+		<antcall target="runtimeSizeTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.GRID(shortName)}" />
+			<param name="name" value="${properties.dataSets.GRID(name)}" />
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_2K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.GRID.parameters.tArrival}" />
+			<param name="dMax" value="2000" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_2K(name)}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeDurationTestGrid_2K">
+		<antcall target="runtimeDurationTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.GRID(shortName)}" />
+			<param name="name" value="${properties.dataSets.GRID(name)}" />
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_2K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.GRID.parameters.tArrival}" />
+			<param name="dMax" value="2000" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_2K(name)}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeSizeTestGrid_4K">
+		<antcall target="runtimeSizeTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.GRID(shortName)}" />
+			<param name="name" value="${properties.dataSets.GRID(name)}" />
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_4K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.GRID.parameters.tArrival}" />
+			<param name="dMax" value="2000" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_4K(name)}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeDurationTestGrid_4K">
+		<antcall target="runtimeDurationTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.GRID(shortName)}" />
+			<param name="name" value="${properties.dataSets.GRID(name)}" />
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_4K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.GRID.parameters.tArrival}" />
+			<param name="dMax" value="2000" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_4K(name)}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeSizeTestGrid_6K">
+		<antcall target="runtimeSizeTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.GRID(shortName)}" />
+			<param name="name" value="${properties.dataSets.GRID(name)}" />
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_6K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.GRID.parameters.tArrival}" />
+			<param name="dMax" value="2000" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_6K(name)}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeDurationTestGrid_6K">
+		<antcall target="runtimeDurationTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.GRID(shortName)}" />
+			<param name="name" value="${properties.dataSets.GRID(name)}" />
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_6K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.GRID.parameters.tArrival}" />
+			<param name="dMax" value="2000" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_6K(name)}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeSizeTestGrid_8K">
+		<antcall target="runtimeSizeTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.GRID(shortName)}" />
+			<param name="name" value="${properties.dataSets.GRID(name)}" />
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_8K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.GRID.parameters.tArrival}" />
+			<param name="dMax" value="2000" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_8K(name)}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeDurationTestGrid_8K">
+		<antcall target="runtimeDurationTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.GRID(shortName)}" />
+			<param name="name" value="${properties.dataSets.GRID(name)}" />
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_8K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.GRID.parameters.tArrival}" />
+			<param name="dMax" value="2000" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_8K(name)}" />
+		</antcall>
+	</target>
+
+
+	<target name="runtimeSizeTestGrid_10K">
+		<antcall target="runtimeSizeTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.GRID(shortName)}" />
+			<param name="name" value="${properties.dataSets.GRID(name)}" />
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_10K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.GRID.parameters.tArrival}" />
+			<param name="dMax" value="10000" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_10K(name)}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeDurationTestGrid_10K">
+		<antcall target="runtimeDurationTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.GRID(shortName)}" />
+			<param name="name" value="${properties.dataSets.GRID(name)}" />
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_10K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.GRID.parameters.tArrival}" />
+			<param name="dMax" value="10000" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_10K(name)}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeSizeTestGrid_3000K">
+		<antcall target="runtimeSizeTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.GRID(shortName)}" />
+			<param name="name" value="${properties.dataSets.GRID(name)}" />
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_3000K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.GRID.parameters.tArrival}" />
+			<param name="dMax" value="61" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_3000K(name)}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeDurationTestGrid_3000K">
+		<antcall target="runtimeDurationTestSynthetic">
+			<param name="dataset" value="${properties.dataSets.GRID(shortName)}" />
+			<param name="name" value="${properties.dataSets.GRID(name)}" />
+			<param name="lOI" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_3000K(link_id)}" />
+			<param name="targetTime" value="${properties.dataSets.GRID.parameters.tArrival}" />
+			<param name="dMax" value="61" />
+			<param name="mode" value="UNIMODAL" />
+			<param name="network" value="${properties.dataSets.GRID.parameters.poi.central.locationOfInterests.table_3000K(name)}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeIntervalTestBZ">
+		<antcall target="runtimeIntervalTest" />
+	</target>
+
+	<target name="runtimeIntervalTestSF">
+		<antcall target="runtimeIntervalTest">
+			<param name="dataset" value="${properties.dataSets.SF(shortName)}" />
+			<param name="name" value="${properties.dataSets.SF(name)}" />
+			<param name="lOI" value="${properties.dataSets.SF.parameters.poi.central.locationOfInterests}" />
+			<param name="startTargetTime" value="${properties.dataSets.SF.startTargetTime}" />
+			<param name="endTargetTime" value="${properties.dataSets.SF.endTargetTime}" />
+			<param name="dMax" value="${properties.dataSets.SF.parameters.dMax}" />
+			<param name="snapSize" value="${properties.dataSets.SF.snapSize(multimodal)}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeIntervalTestDC">
+		<antcall target="runtimeIntervalTest">
+			<param name="dataset" value="${properties.dataSets.DC(shortName)}" />
+			<param name="name" value="${properties.dataSets.DC(name)}" />
+			<param name="lOI" value="${properties.dataSets.DC.parameters.poi.central.locationOfInterests}" />
+			<param name="targetTimes" value="${properties.dataSets.DC.tArrivals}" />
+			<param name="dMax" value="${properties.dataSets.DC.parameters.dMax}" />
+			<param name="snapSize" value="${properties.dataSets.DC.snapSize(multimodal)}" />
+		</antcall>
+	</target>
+
+	<target name="runtimeIntervalTest">
+		<!-- default parameters, can be overwritten -->
+		<property name="dataset" value="${properties.dataSets.BZ(shortName)}" />
+		<property name="name" value="${properties.dataSets.BZ(name)}" />
+		<property name="lOI" value="${properties.dataSets.BZ.parameters.poi.central.locationOfInterests}" />
+		<property name="startTargetTime" value="${properties.dataSets.BZ.startTargetTime}" />
+		<property name="endTargetTime" value="${properties.dataSets.BZ.endTargetTime}" />
+		<property name="dMax" value="${properties.dataSets.BZ.parameters.dMax}" />
+
+		<!-- overide only in some special cases -->
+		<property name="mode" value="${properties.tests.runtimeIntervalTest.mode}" />
+
+		<echo message="Starting the reachability tests for isochrones for ${name}" />
+		<java classname="${properties.tests.runtimeIntervalTest(className)}" classpathref="path.libraries" fork="true">
+			<arg value="algorithm=${properties.project.name}" />
+			<arg value="dataset=${dataset}" />
+			<arg value="lOI=${lOI}" />
+			<arg value="dMax=${dMax}" />
+			<arg value="startTargetTime=${startTargetTime}" />
+			<arg value="endTargetTime=${endTargetTime}" />
+			<arg value="speed=${properties.tests.runtimeIntervalTest.speed}" />
+			<arg value="mode=${mode}" />
+			<arg value="outputWriting=${properties.tests.runtimeIntervalTest.outputWriting}" />
+			<arg value="optimization=${properties.tests.runtimeIntervalTest.optimization}" />
+			<arg value="frequency=${properties.tests.runtimeIntervalTest.frequency}" />
+		</java>
+	</target>
+
+	<target name="confidenceIntervalTest">
+		<!-- default parameters, can be overwritten -->
+		<property name="dataset" value="${properties.dataSets.BZ(shortName)}" />
+		<property name="name" value="${properties.dataSets.BZ(name)}" />
+		<property name="lOI" value="${properties.dataSets.BZ.parameters.poi.central.locationOfInterests}" />
+		<property name="targetTime" value="${properties.dataSets.BZ.parameters.tArrival}" />
+		<property name="dMax" value="${properties.dataSets.BZ.parameters.dMax}" />
+		<property name="queryPointsTable" value="${properties.dataSets.BZ.queryPointsTable}" />
+
+		<!-- overide only in some special cases -->
+		<property name="mode" value="${properties.tests.confidenceIntervalTest.mode}" />
+
+		<echo message="Starting the confidence interval tests for ${name}" />
+		<mkdir dir="${properties.tests.confidenceIntervalTest.outputDir}" />
+
+		<java classname="${properties.tests.confidenceIntervalTest(className)}" classpathref="path.libraries" fork="true">
+			<arg value="algorithm=${properties.project.name}" />
+			<arg value="dataset=${dataset}" />
+			<arg value="lOI=${lOI}" />
+			<arg value="dMax=${dMax}" />
+			<arg value="targetTime=${targetTime}" />
+			<arg value="speed=${properties.tests.confidenceIntervalTest.speed}" />
+			<arg value="mode=${mode}" />
+			<arg value="outputWriting=${properties.tests.confidenceIntervalTest.outputWriting}" />
+			<arg value="optimization=${properties.tests.confidenceIntervalTest.optimization}" />
+			<arg value="mode=${mode}" />
+			<arg value="frequency=${properties.tests.confidenceIntervalTest.frequency}" />
+			<arg value="outputDir=${properties.tests.confidenceIntervalTest.outputDir}/" />
+			<arg value="queryPointsTable=${queryPointsTable}" />
+		</java>
+	</target>
+
+	<target name="runMemoryDBTestGRID" description="description">
+		<property name="mode" value="UNIMODAL" />
+		<antcall target="_memoryDBTest">
+			<param name="mode" value="${mode}" />
+			<param name="dataset" value="${properties.dataSets.GRID(shortName)}" />
+			<param name="name" value="${properties.dataSets.GRID(name)}" />
+			<param name="nOI" value="${properties.dataSets.GRID.parameters.poi.central.nodeOfInterests}" />
+			<param name="targetTime" value="${properties.dataSets.GRID.parameters.tArrival}" />
+			<param name="dMax" value="${properties.tests.memoryDurationTest.dMax}" />
+		</antcall>
+	</target>
+
+	<target name="runMemoryDBTestGRIDDecentral" description="description">
+		<property name="mode" value="UNIMODAL" />
+		<antcall target="_memoryDBTest">
+			<param name="mode" value="${mode}" />
+			<param name="dataset" value="${properties.dataSets.GRID(shortName)}" />
+			<param name="name" value="${properties.dataSets.GRID(name)}" />
+			<param name="nOI" value="${properties.dataSets.GRID.parameters.poi.decentral.nodeOfInterests}" />
+			<param name="targetTime" value="${properties.dataSets.GRID.parameters.tArrival}" />
+			<param name="dMax" value="${properties.tests.memoryDurationTest.dMax}" />
+		</antcall>
+	</target>
+
+	<!-- ================================= 
+          target: computeAllBreakevenPoints              
+         ================================= -->
+	<target name="computeAllBreakevenPoints" description="Computes the break even point of the naive apporach">
+		<property name="algorithmName" value="${properties.project.algorithm(name)}" />
+		<property name="column.index" value="2" />
+		<for list="${properties.dataSets.BZ(shortName)},${properties.dataSets.SF(shortName)},${properties.dataSets.ST(shortName)},${properties.dataSets.IT(shortName)}" param="dSet" delimiter=",">
+			<sequential>
+				<echo message="@{dSet}" />
+				<switch value="@{dSet}">
+					<case value="${properties.dataSets.BZ(shortName)}">
+						<var name="qPoint" value="${properties.dataSets.BZ.parameters.poi.central.nodeOfInterests}" />
+						<var name="arrival.time" value="${properties.dataSets.BZ.parameters.arrivalTime}" />
+					</case>
+					<case value="${properties.dataSets.SF(shortName)}">
+						<var name="qPoint" value="${properties.dataSets.SF.parameters.poi.central.nodeOfInterests}" />
+						<var name="arrival.time" value="${properties.dataSets.SF.parameters.arrivalTime}" />
+					</case>
+					<case value="${properties.dataSets.ST(shortName)}">
+						<var name="qPoint" value="${properties.dataSets.ST.parameters.poi.central.nodeOfInterests}" />
+						<var name="arrival.time" value="${properties.dataSets.ST.parameters.arrivalTime}" />
+					</case>
+					<case value="${properties.dataSets.IT(shortName)}">
+						<var name="qPoint" value="${properties.dataSets.IT.parameters.poi.central.nodeOfInterests}" />
+						<var name="arrival.time" value="${properties.dataSets.IT.parameters.arrivalTime}" />
+					</case>
+				</switch>
+				<!--
+				<var name="dijkstra.file" value="${mdijkstra.basedir}/out/MDijkstra_@{dSet}_MULTIMODAL_${qPoint}_${arrival.time}_runtime_duration.csv" />
+				<var name="in.file" value="${basedir}/out/${algorithmName}_@{dSet}_MULTIMODAL_${qPoint}_${arrival.time}_runtime_duration.csv" />
+				-->
+				<antcall target="computeBreakEvenPoint">
+					<param name="dijkstra.file" value="${mdijkstra.basedir}/out/MDijkstra_@{dSet}_MULTIMODAL_${qPoint}_${arrival.time}_runtime_size_avg.csv" />
+					<param name="in.file" value="${algorithmName}_@{dSet}_MULTIMODAL_${qPoint}_${arrival.time}_runtime_size_avg.csv" />
+					<param name="in.dir" value="${basedir}/out" />
+					<param name="out.dir" value="${basedir}/out/breakeven" />
+				</antcall>
+				<!--
+				<propertyregex property="file.out.prefix" input="${in.file}" regexp="([^.]*)\.csv" select="\1" casesensitive="false" />
+				<echo message="${file.out.prefix}"/>
+				<breakevenPoint fileIn2="${dijkstra.file}" fileIn1="${in.file}" columnIndex="${column.index}" fileOut="${file.out.prefix}_BEPt.csv" />
+				-->
+			</sequential>
+		</for>
+	</target>
+
+	<target name="runtimeSizeTestDetailed">
+		<var name="sizes" value="1" />
+		<for begin="2" end="50" step="1" param="step">
+			<sequential>
+				<var name="sizes" value="${sizes},@{step}" />
+			</sequential>
+		</for>
+
+		<antcall target="runtimeSizeTestBZ">
+			<param name="mode" value="UNIMODAL" />
+			<!-- param name="sizeCheckPoints" value="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20" /-->
+			<param name="sizeCheckPoints" value="${sizes}" />
+			<param name="dMax" value="15" />
+			<param name="frequency" value="50" />
+		</antcall>
+
+		<antcall target="runtimeSizeTestSF">
+			<param name="mode" value="UNIMODAL" />
+			<!-- param name="sizeCheckPoints" value="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20" /-->
+			<param name="sizeCheckPoints" value="${sizes}" />
+			<param name="dMax" value="15" />
+			<param name="frequency" value="50" />
+		</antcall>
+
+		<antcall target="runtimeSizeTestST">
+			<param name="mode" value="UNIMODAL" />
+			<!-- param name="sizeCheckPoints" value="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20" /-->
+			<param name="sizeCheckPoints" value="${sizes}" />
+			<param name="dMax" value="15" />
+			<param name="frequency" value="50" />
+		</antcall>
+
+		<antcall target="runtimeSizeTestIT">
+			<param name="mode" value="UNIMODAL" />
+			<!-- param name="sizeCheckPoints" value="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20" /-->
+			<param name="sizeCheckPoints" value="${sizes}" />
+			<param name="dMax" value="15" />
+			<param name="frequency" value="50" />
+		</antcall>
+
+	</target>
+
+</project>

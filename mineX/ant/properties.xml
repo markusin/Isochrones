@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<properties>
+ <project>
+  <algorithm name="MineX" className="isochrones.minex.algorithm.MineX" />
+  <srcDir>src/isochrones</srcDir>
+  <classDir>classes</classDir>
+  <libDir>lib</libDir>
+  <libextDir>libext</libextDir>
+  <database indexCheck="true">postgresql</database>
+ </project>
+ <dataSets>
+  <!-- Real world data set -->
+  <BZ shortName="BZ" name="Bozen/Bolzano">
+   <parameters>
+    <arrivalDay>2011-05-10</arrivalDay>
+    <arrivalTime>10:10:00</arrivalTime>
+    <dbDay>2011-08-01</dbDay>
+    <weekDay>tuesday</weekDay>
+    <dMax>61</dMax>
+    <sizeCheckPoints dMax="65">
+     <size>1,200,400,600,800,1000,1200,1400,1600,1800,2000,2200,2400</size>
+    </sizeCheckPoints>
+    <durationCheckPoints>1,5,10,15,20,25,30,40,50,60</durationCheckPoints>
+    <fixedSize size="2900" duration="110" />
+    <poi>
+     <central>
+      <nodeOfInterests>2000500</nodeOfInterests>
+      <locationOfInterests>2003440,0;2006296,41</locationOfInterests>
+     </central>
+     <decentral>
+      <nodeOfInterests>2001900</nodeOfInterests>
+      <locationOfInterests description="Sigmundskron, near train station">2005561,30;2002265,38
+      </locationOfInterests>
+     </decentral>
+    </poi>
+   </parameters>
+   <queryPointsTable>BZ_QPOINTS</queryPointsTable>
+   <snapSize unimodal="200" multimodal="200" />
+  </BZ>
+  <SF shortName="SF" name="San Francisco">
+   <parameters>
+    <arrivalDay>2010-11-22</arrivalDay>
+    <arrivalTime>09:50:00</arrivalTime>
+    <dbDay>2010-09-01</dbDay>
+    <weekDay>friday</weekDay>
+    <dMax>61</dMax>
+    <sizeCheckPoints dMax="61">
+     <size>1,1000,2000,3000,4000,6000,8000,10000,12000,14000,15837</size>
+    </sizeCheckPoints>
+    <fixedSize size="2900" duration="31" />
+    <durationCheckPoints>1,5,10,15,20,25,30,40,50,60</durationCheckPoints>
+    <poi>
+     <central>
+      <nodeOfInterests>21355</nodeOfInterests>
+      <locationOfInterests>51303,100</locationOfInterests>
+     </central>
+     <decentral>
+      <nodeOfInterests>33909</nodeOfInterests>
+      <locationOfInterests description="South-West">65717,95</locationOfInterests>
+     </decentral>
+    </poi>
+   </parameters>
+   <queryPointsTable>SF_QPOINTS</queryPointsTable>
+   <snapSize unimodal="1000" multimodal="2000" />
+  </SF>
+  <ST shortName="ST" name="South Tyrol">
+   <parameters>
+    <arrivalDay>2010-09-01</arrivalDay>
+    <arrivalTime>10:30:00</arrivalTime>
+    <dbDay>2010-01-01</dbDay>
+    <weekDay>wednesday</weekDay>
+    <dMax>241</dMax>
+    <sizeCheckPoints  dMax="241">
+     <size>1,1000,5000,10000,15000,20000,25000,30000,40000,50000,60000,68529</size>
+    </sizeCheckPoints>
+    <durationCheckPoints>1,30,60,90,120,150,180,210,240</durationCheckPoints>
+    <fixedSize size="2900" duration="49" />
+    <poi>
+     <central>
+      <nodeOfInterests>2008706</nodeOfInterests>
+      <locationOfInterests>2089724,0</locationOfInterests>
+     </central>
+     <decentral>
+      <nodeOfInterests>2047369</nodeOfInterests>
+      <locationOfInterests>2046962,0</locationOfInterests>
+     </decentral>
+    </poi>
+   </parameters>
+   <queryPointsTable>ST_QPOINTS</queryPointsTable>
+   <snapSize unimodal="200" multimodal="400" />
+  </ST>
+  <DC shortName="WDC" name="Washington DC">
+   <parameters>
+    <arrivalDay>2010-11-22</arrivalDay>
+    <arrivalTime>09:50:00</arrivalTime>
+    <weekDay>monday</weekDay>
+    <dMax>61</dMax>
+    <sizeCheckPoints  dMax="61">
+     <size>1000,2000,3000,4000,6000,8000,10000,12000,14000,16000</size>
+    </sizeCheckPoints>
+    <durationCheckPoints>1,5,10,15,20,25,30,40,50,60</durationCheckPoints>
+    <fixedSize size="2900" duration="100" />
+    <poi>
+     <central>
+      <nodeOfInterests>43097</nodeOfInterests>
+      <locationOfInterests>21073,30</locationOfInterests>
+     </central>
+     <decentral>
+      <nodeOfInterests>52687</nodeOfInterests>
+      <locationOfInterests description="East">19929,25</locationOfInterests>
+     </decentral>
+    </poi>
+   </parameters>
+   <queryPointsTable>DC_QPOINTS</queryPointsTable>
+   <snapSize unimodal="1000" multimodal="2000" />
+  </DC>
+  <IT shortName="IT" name="Italy">
+   <parameters>
+    <arrivalDay>2011-09-20</arrivalDay>
+    <arrivalTime>15:00:00</arrivalTime>
+    <dbDay>2012-01-01</dbDay>
+    <weekDay>tuesday</weekDay>
+    <dMax>661</dMax>
+    <sizeCheckPoints dMax="590">
+     <size>1000,50000,100000,150000,200000,250000,300000,350000,400000,450000,500000,550000,600000,650000,700000,750000,800000,850000,900000,950000,1000000
+     </size>
+    </sizeCheckPoints>
+    <durationCheckPoints>1,50,100,150,200,250,300,350,400,450,500,550,600,650</durationCheckPoints>
+    <fixedSize size="2900" duration="62" />
+    <poi>
+     <central>
+      <nodeOfInterests>21</nodeOfInterests>
+      <locationOfInterests>setme</locationOfInterests>
+     </central>
+     <decentral>
+      <nodeOfInterests>setme</nodeOfInterests>
+      <locationOfInterests>setme</locationOfInterests>
+     </decentral>
+    </poi>
+   </parameters>
+   <queryPointsTable>IT_QPOINTS</queryPointsTable>
+   <snapSize unimodal="200" multimodal="400" />
+  </IT>
+  <!-- Synthetic data set -->
+  <SPIDER shortName="SPIDER" name="Syntetic Spider-formed network">
+   <parameters>
+    <arrivalDay>2010-05-31</arrivalDay>
+    <arrivalTime>19:50:00</arrivalTime>
+    <dMax>301</dMax>
+    <poi>
+     <central>
+      <!--locationOfInterests innest="1" halfOutest="216" outest="1410">1</locationOfInterests -->
+      <!--locationOfInterests innest="1" halfOutest="456" outest="1410">1</locationOfInterests -->
+      <locationOfInterests innest="1" outest="1410">
+       <level_0 link_id="1" node_id="0" />
+       <level_10 link_id="216" node_id="55" />
+       <level_15 link_id="336" node_id="85" />
+       <level_20 link_id="456" node_id="115" />
+       <level_30 link_id="696" node_id="175" />
+       <level_40 link_id="936" node_id="235" />
+       <level_45 link_id="1056" node_id="265" />
+       <level_50 link_id="1176" node_id="295" />
+       <level_60 link_id="1410" node_id="354" />
+       <table_2K link_id="1" name="SPIDER_L334" />
+       <table_4K link_id="1" name="SPIDER_L668" />
+       <table_6K link_id="1" name="SPIDER_L1001" />
+       <table_8K link_id="1" name="SPIDER_L1335" />
+       <table_10K link_id="1" name="SPIDER_L1668" />
+       <table_1000K link_id="1" name="" />
+      </locationOfInterests>
+      <!--locationOfInterests innest="1" outest="1410"> <level_0 link_id="1" node_id="0"/> <level_10 
+       link_id="144" node_id="37"/> <level_15 link_id="224" node_id="37"/> <level_20 link_id="327" node_id="79"/> 
+       <level_30 link_id="483" node_id="118"/> <level_40 link_id="624" node_id="157"/> <level_45 link_id="704" 
+       node_id="177"/> <level_50 link_id="784" node_id="197"/> <level_60 link_id="928" node_id="233"/> </locationOfInterests -->
+      <offsetOfInterests>0</offsetOfInterests>
+     </central>
+     <decentral>
+      <locationOfInterests l_30="739" l_60="1459" l_half_outmost="499993"
+       l_outmost="3999936">241</locationOfInterests>
+      <offsetOfInterests>0</offsetOfInterests>
+     </decentral>
+    </poi>
+   </parameters>
+   <queryPointsTable>SPIDER_QPOINTS</queryPointsTable>
+   <snapSize unimodal="100" />
+  </SPIDER>
+  <GRID shortName="GRID" name="Syntetic Grid-formed network">
+   <parameters>
+    <arrivalDay>2010-05-31</arrivalDay>
+    <arrivalTime>19:50:00</arrivalTime>
+    <dMax>70</dMax>
+    <poi>
+     <central>
+      <nodeOfInterests>3851</nodeOfInterests>
+      <locationOfInterests innest="28922" halfOutest="14342" outest="0">
+       <level_0 link_id="28922" node_id="7320" />
+       <level_10 link_id="28882" node_id="7310" />
+       <level_15 link_id="28862" node_id="7305" />
+       <level_20 link_id="28842" node_id="7300" />
+       <level_30 link_id="28802" node_id="7290" />
+       <level_40 link_id="28762" node_id="7280" />
+       <level_45 link_id="28742" node_id="7275" />
+       <level_50 link_id="28722" node_id="7270" />
+       <level_60 link_id="28682" node_id="7260" />
+       <table_2K link_id="3672" name="SYNTH_GRID_#V_2000" />
+       <table_4K link_id="7618" name="SYNTH_GRID_#V_4000" />
+       <table_6K link_id="11574" name="SYNTH_GRID_#V_6000" />
+       <table_8K link_id="15538" name="SYNTH_GRID_#V_8000" />
+       <table_10K link_id="19502" name="SYNTH_GRID_#V_10000" />
+       <table_3000K link_id="1999004" name="SYNTH_GRID_#V_3000000" />
+      </locationOfInterests>
+      <offsetOfInterests>0</offsetOfInterests>
+     </central>
+     <decentral>
+      <nodeOfInterests>0</nodeOfInterests>
+      <locationOfInterests>0</locationOfInterests>
+      <offsetOfInterests>0</offsetOfInterests>
+     </decentral>
+    </poi>
+   </parameters>
+   <queryPointsTable>GRID_QPOINTS</queryPointsTable>
+   <snapSize unimodal="500" />
+  </GRID>
+ </dataSets>
+ <tests reservedMemorySize="128">
+  <memoryDurationTest className="isochrones.minex.utils.MemoryDurationExperiment">
+   <dMax>60</dMax>
+   <speed>1.0</speed>
+   <mode>MULTIMODAL</mode>
+   <outputWriting>false</outputWriting>
+   <singleBreakpoint>false</singleBreakpoint>
+  </memoryDurationTest>
+  <memorySizeTest className="isochrones.minex.utils.MemorySizeExperiment">
+   <dMax>60</dMax>
+   <speed>1.0</speed>
+   <mode>MULTIMODAL</mode>
+   <outputWriting>false</outputWriting>
+   <singleBreakpoint>false</singleBreakpoint>
+  </memorySizeTest>
+  <confidenceIntervalTest className="isochrones.minex.utils.ConfidenceIntervalExperiment">
+   <speed>1.0</speed>
+   <mode>MULTIMODAL</mode>
+   <outputWriting>false</outputWriting>
+   <initialDuration>1</initialDuration>
+   <scale>5</scale>
+   <range>15</range>
+   <frequency>10</frequency>
+   <randomQueryPoint>false </randomQueryPoint>
+   <numberOfQueryPoints>10</numberOfQueryPoints>
+   <outputDir>./out/</outputDir>
+  </confidenceIntervalTest>
+  <runtimeDurationTest className="isochrones.minex.utils.RuntimeDurationExperiment">
+   <speed>1.0</speed>
+   <mode>MULTIMODAL</mode>
+   <outputWriting>false</outputWriting>
+   <frequency>5</frequency>
+   <outputDir>./out/</outputDir>
+   <singleBreakpoint>false</singleBreakpoint>
+  </runtimeDurationTest>
+  <runtimeSizeTest className="isochrones.minex.utils.RuntimeSizeExperiment">
+   <speed>1.0</speed>
+   <mode>MULTIMODAL</mode>
+   <outputWriting>false</outputWriting>
+   <frequency>10</frequency>
+   <outputDir>./out/</outputDir>
+   <singleBreakpoint>false</singleBreakpoint>
+  </runtimeSizeTest>
+  <runtimeFixedSizeTest className="isochrones.minex.utils.RuntimeFixedSizeExperiment">
+   <speed>1.0</speed>
+   <dMax>150</dMax>
+   <mode>MULTIMODAL</mode>
+   <outputWriting>false</outputWriting>
+   <frequency>10</frequency>
+   <isoSize>2900</isoSize>
+   <outputDir>./out/</outputDir>
+   <singleBreakpoint>false</singleBreakpoint>
+  </runtimeFixedSizeTest>
+  <runtimePercentageTest className="isochrones.minex.utils.RuntimeExperimentPercentage">
+   <speed>1.0</speed>
+   <mode>MULTIMODAL</mode>
+   <outputWriting>false</outputWriting>
+   <frequency>10</frequency>
+   <outputDir>./out/</outputDir>
+  </runtimePercentageTest>
+  <runtimeIntervalTest className="isochrones.minex.utils.RuntimeIntervalExperiment">
+   <speed>1.0</speed>
+   <mode>MULTIMODAL</mode>
+   <outputWriting>false</outputWriting>
+   <frequency>10</frequency>
+   <outputDir>./out/</outputDir>
+  </runtimeIntervalTest>
+  <reachabilityTest className="isochrones.minex.utils.ReachabilityExperiment">
+   <speed>1.0</speed>
+   <mode>MULTIMODAL</mode>
+   <outputWriting>false</outputWriting>
+   <outputDir>./out/</outputDir>
+  </reachabilityTest>
+  <memoryDBTest className="isochrones.minex.utils.MemoryDurationCountLoadedTuplesExperiment">
+   <speed>1.0</speed>
+   <mode>MULTIMODAL</mode>
+   <outputWriting>false</outputWriting>
+  </memoryDBTest>
+ </tests>
+</properties>

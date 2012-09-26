@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/Commons/src/main/java/isochrones/launchers/algorithm/IsochroneLauncher.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="isochrones.launchers.algorithm.IsochroneLauncher"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="dbType=postgresql&#10;algorithmName=MineX&#10;algorithmClassName=isochrones.minex.algorithm.MineX&#10;dataset=BZ&#10;dMax=60&#10;nOI=5025&#10;targetTime=2011-05-02T10:10:00&#10;speed=1.0&#10;mode=MULTIMODAL&#10;outputWriting=true&#10;debug=true&#10;useDensity=true&#10;loadingRangeMode=Circle"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="MineX_trunk"/>
+</launchConfiguration>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="info" basedir="../">
+	<xmlproperty file="./ant/properties.xml" semanticattributes="true" includesemanticattribute="true" />
+	<path id="path.libext">
+		<fileset dir="${properties.project.libext}">
+			<include name="**/*.jar" />
+		</fileset>
+		<pathelement path="${properties.project.classDir}" />
+	</path>
+	
+	<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="path.libext"/>
+
+	<target name="info">
+		<echo>ant makeJar --> creates the jar of this project</echo>
+		<echo>ant deploy --> deployes the created jar file in the associated projects</echo>
+	</target>
+
+	<fileset id="deployableFileSet" dir="${properties.project.lib}">
+		<include name="${properties.project.jarName}" />
+		<include name="commons.xml" />
+	</fileset>
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+       target: compileIsochrones                      
+      - - - - - - - - - - - - - - - - - -->
+	<target name="compile" depends="clean">
+		<mkdir dir="${properties.project.classDir}" />
+		<echo message="Compiling isochrones" level="info" />
+		<javac srcdir="${properties.project.srcDir}" destdir="${properties.project.classDir}" verbose="true" failonerror="true" debug="on" source="1.6" classpathref="path.libext">
+		</javac>
+	</target>
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: clean                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="clean">
+		<delete failonerror="false">
+			<fileset dir="${properties.project.classDir}" includes="**/*.class" />
+		</delete>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+	          target: makeJar                      
+	         - - - - - - - - - - - - - - - - - -->
+	<target name="makeJar" depends="compile">
+		<copy file="${properties.project.srcDir}/isochrones/ant/tasks/antlib.xml" todir="${properties.project.classDir}/isochrones/ant/tasks" overwrite="true"/>
+		<jar destfile="${properties.project.lib}/${properties.project.jarName}" basedir="${properties.project.classDir}" />
+	</target>
+
+	<target name="deploy" depends="makeJar">
+		<copy todir="${properties.referencedProjects.MDijkstra.destinationDir}/lib" overwrite="true">
+			<fileset refid="deployableFileSet" />
+		</copy>
+		<copy todir="${properties.referencedProjects.Mine.destinationDir}/lib" overwrite="true">
+			<fileset refid="deployableFileSet" />
+		</copy>
+		<copy todir="${properties.referencedProjects.MineX.destinationDir}/lib" overwrite="true">
+			<fileset refid="deployableFileSet" />
+		</copy>
+		<copy todir="${properties.referencedProjects.MierWine.destinationDir}/lib" overwrite="true">
+			<fileset refid="deployableFileSet" />
+		</copy>
+		<copy todir="${properties.referencedProjects.Mpgr.destinationDir}/lib" overwrite="true">
+			<fileset refid="deployableFileSet" />
+		</copy>
+		<copy todir="${properties.referencedProjects.Mier.destinationDir}/lib" overwrite="true">
+			<fileset refid="deployableFileSet" />
+		</copy>
+	</target>
+
+	<!-- ================================= 
+          target: commit              
+         ================================= -->
+	<target name="commit" depends="deploy" description="description">
+		<svn javahl="true" svnkit="false" username="user" password="passwd">
+			<commit dir="${properties.referencedProjects.MineX.destinationDir}/lib" message="test"/>
+			<commit dir="${properties.referencedProjects.Mine.destinationDir}/lib" message="test"/>
+			<commit dir="${properties.referencedProjects.MDijkstra.destinationDir}/lib" message="test"/>
+				
+			<commit dir="${properties.referencedProjects.MierWine.destinationDir}/lib" message="test"/>
+		</svn>
+		
+		<!--
+		<exec command="svn commit -m '' ${properties.referencedProjects.MDijkstra.destinationDir}/lib" />
+		<exec command="svn commit -m '' ${properties.referencedProjects.Mine.destinationDir}/lib" />
+		<exec command="svn commit -m '' ${properties.referencedProjects.MineX.destinationDir}/lib" />
+		<exec command="svn commit -m '' ${properties.referencedProjects.MierWine.destinationDir}/lib" />
+		<exec command="svn commit -m '' ${properties.referencedProjects.Mpgr.destinationDir}/lib" />
+		<exec command="svn commit -m '' ${properties.referencedProjects.Mier.destinationDir}/lib" />
+		-->
+	</target>
+
+
+</project>

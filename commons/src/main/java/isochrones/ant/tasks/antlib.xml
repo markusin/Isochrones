@@ -1,0 +1,7 @@
+<antlib>
+ <taskdef name="avg" classname="isochrones.ant.tasks.AverageTask" onerror="ignore" />
+ <typedef name="randomTimeStamp" classname="isochrones.ant.tasks.RandomTStampTask" onerror="ignore" />
+ <typedef name="breakevenPoint" classname="isochrones.ant.tasks.BreakEvenPointTask" onerror="ignore" />
+ <typedef name="densityGeneration" classname="isochrones.ant.tasks.DensityGenerationTask" onerror="ignore" />
+ <typedef name="vertexDensityGeneration" classname="isochrones.ant.tasks.VertexDensityGenerationTask" onerror="ignore" />
+</antlib>
